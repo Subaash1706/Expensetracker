@@ -1,0 +1,100 @@
+body{
+    max-width: 100%!important;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar{
+    width: 10px;
+}
+::-webkit-scrollbar-track{
+    background-color: rgba(183, 180, 180, 0.361);
+}
+::-webkit-scrollbar-thumb{
+    background-color: rgba(0, 0, 0, 0.401);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover{
+    background-color: rgba(0, 0, 0, 0.703); 
+}
+.accordionButton:focus, .accordionButton:active{
+    border: none;
+    outline: none;
+}
+
+#offcanvas{
+    transition: all 0.35s;
+}
+#offcanvas a, #accordionButton{
+    font-size: 20px;
+}
+#accordionButton img{
+    transition: all 0.25s;
+}
+#accordion{
+    transition: all 0.25s;
+}
+#accordion .nav-link.text-black:first-child {
+    font-size: 16px;
+  }
+  #accordion .nav-link.text-black:last-child {
+    font-size: 16px;
+  }
+  
+.activeArrow{
+    transform: rotateZ(180deg);
+}
+.btn-close:active{
+    border: none;
+    outline: none;
+}
+.active{
+    background-color: gray;
+}
+#switch{
+    font-size: 1.5rem;
+}
+#navUl li{
+    padding: 15px 0 5px 0px;
+}
+.chart-container{
+    height: 280px;
+}
+#sortMenu a{
+    text-decoration: none!important;
+}
+.card{
+    position: relative;
+}
+.card-body img{
+    width: 30px;
+    height: 30px;
+}
+#dashExpenseList{
+    max-height: 450px;
+    overflow-y: auto;
+}
+.dropdown-item{
+    cursor: pointer;
+}
+#modalButton{
+    right: 10px;
+}
+#modalButton button{
+    font-size: 1.5rem;
+    transition: all 0.15s;
+}
+#modalButton button:active{
+    transform: scale(1.05);
+}
+#previewImgContainer{
+    max-width: 200px;
+    max-height: 400px;
+    background-size: cover;
+}
+#previewImgContainer img{
+    max-width: 185px;
+    height: auto;
+    object-fit: contain;
+}
+.badge{
+    cursor: pointer;
+}

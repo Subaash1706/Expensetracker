@@ -1,0 +1,22 @@
+.accordion-button{
+    cursor: pointer;
+}
+.accordion-header{
+    padding: 15px;
+}
+.accordion-button,.accordion-item{
+    background-color: #fff;
+}
+.accordion-button:focus, .accordion-button:active,.accordion-item:focus,.accordion-item:active{
+    background-color: #fff;
+}
+.accordion-collapse{
+    transition: all 0.25s;
+}
+.accordion-header{
+    background-color: white!important;
+}
+
+
+
+

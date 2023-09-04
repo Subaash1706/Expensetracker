@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body class="overflow-x-hidden vw-100">
+
+<!---------------------------------------- Form to add expense/income manually ------------------------------------------------->
+<form class="modal fade" id="modal" data-bs-backdrop="static" novalidate>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">Add Expense/Income</div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <div class="input-group-text">₹</div>
+                    <input type="number" class="form-control" placeholder="Amount" id="addAmountInput" required>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle"data-bs-target='#chooseCategory' data-bs-toggle="dropdown" id="chooseCategoryButton">
+                            Expense/Income
+                        </button>
+                        <div class="dropdown-menu" id="chooseCategoryParent">
+                            <li><a href="#" class="dropdown-item" id="chooseCategory">Expense</a></li>
+                            <li><a href="#" class="dropdown-item" id="chooseCategory">Income</a></li>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-12">
+                       <input type="text" class="form-control mt-3 col col-5" placeholder="Source" id="addAmountSource" required>
+                        <input type="date" name="date" id="addAmountDate" class="form-control col col-5 mt-3" required> 
+                    </div>
+                </div>
+                    
+                <div class="row my-3">
+                    <div class="col col-12 text-center">
+                        <button class="btn btn-danger col-4 mx-3 rounded-2" data-bs-dismiss="modal" id="addAmountCloseButton">Cancel</button>
+                        <button class="btn btn-success col-4 rounded-2" id="addAmountButton" type="submit">Add entry</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--------------------------------------- Form to add expense/income with an image ---------------------------------------------->
+<form action="" class="modal" id="imageModal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">Add Expense/Income by uploading an image</div>
+            <div class="modal-body" id="imageModalBody">
+                <input type="file" class="form-control my-2" id="fileUpload" accept="image/*">
+                <select name="expensOrIncome" id="inputTypeSelect" class="form-select">
+                    <option value="Expense">Expense</option>
+                    <option value="Income">Income</option>
+                </select>
+                <div class="row d-flex justify-content-center mt-3 bg-success-subtle mx-1 rounded border">
+                    <div class="col col-12 my-2" id="previewImgContainer">
+                        <img src="" alt="" id="previewImg">
+                        <!-- preview image to be displayed here -->
+                    </div>
+                </div>
+                
+                <div class="card" id="scannedContentContainer">
+                    <div class="card-body  visually-hidden" id="scannedContent">
+                        <div class="lead">Scanned content</div>
+                        <!-- Scanned content goes here dynamically -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="imageModalFooter">
+                <!-- Scanner button goes here -->
+            </div>
+        </div>
+    </div>
+</form>
+
+<!------------------------------------------------Navbar and offcanvas elements ------------------------------------------------>
+<div class="navbar p-2 bg-light position-sticky top-0 z-3 shadow-sm" id="navBarContainer">
+    <nav class="navbar-nav">
+        <button class="btn" data-bs-target="#offcanvas" data-bs-toggle="offcanvas"><span class="navbar-toggler-icon"></span></button>
+    </nav>
+    <a href="#" class="navbar-brand display-2">Expense Tracker</a>
+</div>
+<div class="offcanvas offcanvas-start" id="offcanvas" data-bs-scroll="false">
+    <div class="offcanvas-header bg-light">
+        <div class="display-6">Expense Tracker</div>
+        <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>   
+        <ul class="nav nav-pills d-flex flex-column position-relative" id="navUl">
+                <li class="nav-item"><a href="#" class="nav-link text-dark">Dashboard</a></li>
+                <li class="nav-item">
+                    <div class="accordion-flush">
+                        <div class="accordion-item px-3 py-2 text-black">
+                            <div class="accordion-header">
+                                <button class="accordion-button bg-white border border-0 position-relative" data-bs-target="#accordion" data-bs-toggle="collapse" id="accordionButton">Add expense/income
+                                    <span class="position-absolute end-0"><img src="./images/arrowIcon.png" alt="accordion arrow" height="13" width="13" id="accordionArrow"></span>
+                                </button>
+                            </div>
+                            <div class="accordion-collapse collapse" id="accordion">
+                                <div class="accordion-body">
+                                    <ul class="nav flex-column" >
+                                        <li class="nav-item"><a href="#" class="nav-link text-black" data-bs-target="#modal" data-bs-toggle="modal">By Manual</a></li>
+                                        <li class="nav-item"><a href="#" class="nav-link text-black" data-bs-target="#imageModal" data-bs-toggle="modal">By Image</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </li>      
+                <li class="nav-item"><a href="#" class="nav-link text-dark">Download Report</a></li>
+                <li class="nav-item"><a href="./pages/expenseHistory.html" class="nav-link text-dark">Expense History</a></li>   
+            </ul>
+            <div class="form-switch position-absolute bottom-0 py-2 end-0">
+                <input type="checkbox" class="form-check-input" id="switch">
+            </div>
+
+    
+</div>
+
+<!-------------------------------------------------------- Body content --------------------------------------------------------->
+<div class="container-fluid mt-3">
+    <div class="row px-3 d-flex justify-content-center">
+        <div class="col col-lg-8 col-12">
+            <div class="row row-cols-1 row-cols-lg-2">
+                <div class="col col-12 col-lg-7 ">
+                    <div class="row h-100 d-md-flex justify-content-center">
+                        <div class="col col-12 col-md-8 col-lg-12 mb-sm-3 mb-3">
+                            <div class="card h-100 bg-primary-subtle shadow mb-sm-3">
+                                <div class="card-header">Balance</div>
+                                <div class="card-body position-relative">
+                                    <div class="card-text display-3" id="cardTotalAmount">
+                                       <!--Leftover amount to be rendered dynamically with JS based on user input -->
+                                       ₹0
+                                    </div>
+                                    <div class="position-absolute bottom-0 col-lg-3" id="modalButton">
+                                        <button class="btn btn-info rounded-4 w-100 mb-lg-3 mb-3 mb-md-4" data-bs-target="#modal" data-bs-toggle="modal">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col col-12 col-md-12 col-lg-5 mb-sm-3">
+                    <div class="row d-md-flex justify-content-center">
+                        <div class="col col-12 col-md-8 col-lg-12">
+                            <div class="row">
+                                <div class="col col-12 col-sm-6 col-md-6 col-lg-12 mb-3">
+                                    <div class="card mb-lg-2 bg-success-subtle shadow">
+                                        <div class="card-header">Income</div>
+                                        <div class="card-body">
+                                            <div class="card-text display-6" id="cardIncome">
+                                                <!--Total Income to be rendered dynamically with JS based on user input -->
+                                                ₹0
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-12 col-sm-6 col-md-6 col-lg-12 mb-3">
+                                    <div class="card bg-danger-subtle shadow">
+                                        <div class="card-header">
+                                            Expense
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-text display-6" id="cardExpense">
+                                                <!--Total expended amount to be rendered dynamically with JS based on user input -->
+                                                ₹0
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+<!----------------------------------------------------------- Chart ------------------------------------------------------------->
+        <div class="col col-lg-3 col-12 p-2 d-flex justify-content-center border border-2 shadow  pb-2 rounded-3" id="chartContainer">
+            <div class="chart-container">
+              <canvas id="myPieChart"></canvas>  
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------------------- Expense history on Dashboard ------------------------------------------------>
+<div class="row px-md-3 mt-4 d-flex justify-content-center pe-0 me-0">
+    <div class="col col-10 col-lg-11">
+        <div id="dateContainer" class="row d-flex justify-content-between align-items-center mb-2">
+            <div class="col" id="date">
+              <!-- Date will be added dynamically with JS   -->
+            </div>
+            <div class="col">
+                <div class="dropdown d-flex justify-content-end">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-secondary" id="dropdownButton" data-bs-toggle="button">Filter By</button>
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"><span class="visually-hidden">Toggle Dropdown</span></button>
+                    <ul class="dropdown-menu" id="sortMenu">
+                        <li><a class="dropdown-item" href="#" id="filterBy">Expense</a></li>
+                        <li><a class="dropdown-item" href="#" id="filterBy">Income</a></li>
+                        <div class="dropdown-divider">
+                        </div>
+                        <li><a href="#" class="dropdown-item" id="filterBy">All</a></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col col-11 col-md-12" id="dashExpenseList">
+                <!-- Income/expense to be added dynamically through JS -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src='https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="./main.js"></script>
+
+</body>
+</html>
