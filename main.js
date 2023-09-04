@@ -35,7 +35,7 @@ addAmountChooseLi.forEach(item=>{
 
 addAmountCloseButton.addEventListener('click',(e)=>e.preventDefault())
 
-const expenseArrayHard = [] //Important array
+const expenseArrayHard = JSON.parse(localStorage.getItem('expenseArray')) || [] //Important array
 
 // Date for Dashboard
 const date=new Date();
@@ -56,7 +56,6 @@ dropdownMenu.forEach(item=>{
     item.addEventListener('click',(e)=>{
         dropdownToggleButton.classList.add('active')
         e.preventDefault();
-        dropdownToggleButton.classList.contains('active') ? filterExpenseArray(e.target.innerHTML, expenseArrayHard) : filterExpenseArray(expenseArrayHard)
     })
 })
 
@@ -181,6 +180,7 @@ formModal.addEventListener('submit',(e)=>{
         toPush.forEach(item=>{indExpenseArr.push(item.value);item.value=''})
         expenseArrayHard.push(indExpenseArr)
         renderExpense(expenseArrayHard)  
+        updateLocalstorate(expenseArrayHard)
     } 
 })
 
@@ -273,6 +273,7 @@ fileInput.addEventListener('change',()=>{
                 }
                 expenseArrayHard.push(inpValueArray);
                 renderExpense(expenseArrayHard)
+                updateLocalstorate(expenseArrayHard)
 
             })
             const inpArray = [reason, amount, dateInp, submitButton]
@@ -314,6 +315,6 @@ fileInput.addEventListener('change',()=>{
     }
 })
 
-
-
-export {expenseArrayHard}
+function updateLocalstorate(inpArray){
+    localStorage.setItem('expenseArray', JSON.stringify(inpArray))
+}
