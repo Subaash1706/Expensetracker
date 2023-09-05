@@ -35,8 +35,6 @@ addAmountChooseLi.forEach(item=>{
 
 addAmountCloseButton.addEventListener('click',(e)=>e.preventDefault())
 
-const expenseArrayHard = JSON.parse(localStorage.getItem('expenseArray')) || [] //Important array
-
 // Date for Dashboard
 const date=new Date();
 htmlDate.classList.add('d-none','d-md-block')
@@ -314,7 +312,3 @@ fileInput.addEventListener('change',()=>{
       })
     }
 })
-
-function updateLocalstorate(inpArray){
-    localStorage.setItem('expenseArray', JSON.stringify(inpArray))
-}
