@@ -14,9 +14,9 @@
             <div class="modal-body">
                 Do you want to clear all data ?
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline-success" data-bs-dismiss="modal">Yes</button>
-                <button class="btn btn-outline-danger" data-bs-dismiss="modal">No</button>
+            <div class="modal-footer" id="resetButtons">
+                <button class="btn btn-outline-success" data-bs-dismiss="modal" id="resetYes">Yes</button>
+                <button class="btn btn-outline-danger" data-bs-dismiss="modal" id="resetNo">No</button>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@
                         <div class="col col-12 col-md-8 col-lg-12 mb-sm-3 mb-3">
                             <div class="card h-100 bg-primary-subtle shadow mb-sm-3">
                                 <div class="card-header position-relativ">Balance
-                                    <img src="./images/reset.png" alt="Reset amouts" id="resetArrow" class="position-absolute" data-tooltip = 'Reset all'></div>
+                                    <img src="./images/reset.png" alt="Reset amouts" id="resetArrow" class="position-absolute" data-tooltip = 'Reset all' data-bs-target="#resetModal" data-bs-toggle="modal"></div>
                                 <div class="card-body position-relative">
                                     <div class="card-text display-3" id="cardTotalAmount">
                                        <!--Leftover amount to be rendered dynamically with JS based on user input -->
@@ -199,8 +199,9 @@
 
 <!----------------------------------------------------------- Chart ------------------------------------------------------------->
         <div class="col col-lg-3 col-12 p-2 d-flex justify-content-center border border-2 shadow  pb-2 rounded-3" id="chartContainer">
-            <div class="chart-container">
-              <canvas id="myPieChart"></canvas>  
+            <div class="chart-container d-flex justify-content-center align-items-center">
+                <div id="chartContainertext" class="text-muted position-absolute z-1">The Chart appears here</div>
+              <canvas id="myPieChart" class="z-2"></canvas>  
             </div>
         </div>
     </div>
@@ -240,7 +241,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <script src='https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script type="module" src="./main.js"></script>
+<script src="./main.js"></script>
 
 </body>
 </html>

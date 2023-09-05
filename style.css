@@ -98,3 +98,10 @@ body{
 .badge{
     cursor: pointer;
 }
+#resetArrow{
+    width: 15px;
+    cursor: pointer;
+    right: 15px;
+    transform: translateY(5px);
+    transition: all 1s;
+}

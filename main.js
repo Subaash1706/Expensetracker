@@ -18,6 +18,8 @@ const cardTotalAmount = document.querySelector('#cardTotalAmount');
 const cardIncome = document.querySelector('#cardIncome');
 const cardExpense = document.querySelector('#cardExpense');
 const formModal = document.querySelector('#modal')
+const resetArrow = document.getElementById('resetArrow')
+const resetButtons = document.querySelectorAll('#resetButtons>button')
 const btnDanger = 'btn-danger'
 const btnSuccess = 'btn-success'
 const bgDangerSubtle = 'bg-danger-subtle'
@@ -45,6 +47,9 @@ const today = `${
 -${String(date.getFullYear())}`
 htmlDate.innerHTML = `Expense/Income history as of: ${today}`
 
+const expenseArrayHard = (JSON.parse(localStorage.getItem('expenseArray'))) || [] //Important array
+expenseArrayHard.length > 0 ? renderExpense(expenseArrayHard) : null
+
 accordionButton.addEventListener('click',()=>{
     arrow.classList.toggle('activeArrow')
 })
@@ -54,11 +59,12 @@ dropdownMenu.forEach(item=>{
     item.addEventListener('click',(e)=>{
         dropdownToggleButton.classList.add('active')
         e.preventDefault();
+        filterExpenseArray(e.target.innerHTML , expenseArrayHard)
     })
 })
 
 function filterExpenseArray(targetValue, expenseArray){
-    const filteredExpenseArray = (targetValue === 'All' ? expenseArrayHard : 
+    const filteredExpenseArray = (targetValue === 'All' ? expenseArray : 
     (targetValue === 'Expense' ? expenseArray.filter(item=>item[0] === 'Expense') :
     expenseArray.filter(item=>item[0] === 'Income')));
     renderExpense(filteredExpenseArray)
@@ -68,7 +74,7 @@ function filterExpenseArray(targetValue, expenseArray){
 // Checks whether the filter is ON and based on the condition, the array is being rendered on dashboard
 dropdownToggleButton.addEventListener('click',(e)=>{
     if (!e.target.classList.contains('active')) {
-        renderExpense(expenseArrayHard)        
+        renderExpense(expenseArrayHard)       
     }
 })
 // Renders income/expense cards on dashboard dynamically 
@@ -106,7 +112,7 @@ function renderExpense(expenseArray){
     renderCardAmounts(currentMonthExpenseArray);
 }
 
-
+// Rendering appropriate cards from the stored expense array
 function renderCardAmounts(currentMonthExpenseArray){
         let totalAmount = 0;
         let totalExpense = 0;
@@ -178,7 +184,7 @@ formModal.addEventListener('submit',(e)=>{
         toPush.forEach(item=>{indExpenseArr.push(item.value);item.value=''})
         expenseArrayHard.push(indExpenseArr)
         renderExpense(expenseArrayHard)  
-        updateLocalstorate(expenseArrayHard)
+        updateLocalstorage(expenseArrayHard)
     } 
 })
 
@@ -311,4 +317,14 @@ fileInput.addEventListener('change',()=>{
           })
       })
     }
+})
+
+function updateLocalstorage(expenseArrayHard){
+    localStorage.setItem('expenseArray',JSON.stringify(expenseArrayHard))
+}
+
+resetButtons.forEach(item=>{
+    item.addEventListener('click',(e)=>{
+        e.target.innerHTML === 'Yes' ? (localStorage.removeItem('expenseArray'),renderExpense(expenseArrayHard),location.reload()) : null
+    })
 })
