@@ -24,6 +24,12 @@ const btnDanger = 'btn-danger'
 const btnSuccess = 'btn-success'
 const bgDangerSubtle = 'bg-danger-subtle'
 const bgSuccessSubtle = 'bg-success-subtle'
+const darkSwitch = document.getElementById('switch')
+
+darkSwitch.addEventListener('click', ()=>{
+    if(darkSwitch.checked) body.setAttribute('data-theme','dark')
+    else body.removeAttribute('data-theme')
+})
 
 addAmountChooseLi.forEach(item=>{
     item.addEventListener('click',(e)=>{
@@ -81,12 +87,15 @@ dropdownToggleButton.addEventListener('click',(e)=>{
 function renderExpense(expenseArray){
     const currentMonthExpenseArray = [];
     expenseArray.forEach(item=>{
-        if(item[2].split('-')[1] === currentMonth){
+        if((item[2].split('-')[1] === currentMonth) && Number(item[2].split('-')[0]) === (new Date().getFullYear())){
             currentMonthExpenseArray.push(item)
         }
     })
     expenseList.innerHTML = '';
     renderChart(currentMonthExpenseArray)
+    const deleteButton = document.createElement('span');
+    deleteButton.classList.add('material-symbols-outlined')
+    deleteButton.textContent = 'delete'
     currentMonthExpenseArray.forEach(arr => {
         const cardContainer = document.createElement('div');
         cardContainer.classList.add('card', 'd-flex', 'flex-column', 'mb-3','position-relative');
@@ -96,22 +105,26 @@ function renderExpense(expenseArray){
         cardContent.classList.add('card-body', 'd-flex', 'flex-md-row', 'flex-column','flex-lg-row', 'justify-content-between');
         arr.forEach((item,index) => {
             const cardItem = document.createElement('div');
-            if(index===0){
-                cardImage.src = `./images/${item}.png`
-            }
-
             cardItem.classList.add('card-text', 'col-12','col-md-2','mr-2');
-            cardItem.textContent = item;
+            if(index===0){
+                cardImage.src = `./images/${item}.png`;
+                cardItem.textContent = item;
+            }
+            else if(index ===3 ){
+                cardItem.textContent = `₹${item}`
+            }
+            else{
+                cardItem.textContent = item;
+            }
+            
             cardContent.appendChild(cardItem);
-            cardContent.appendChild(cardImage)
+            cardContent.appendChild(cardImage);
         });
-
         cardContainer.appendChild(cardContent);
         expenseList.appendChild(cardContainer);
     });
     renderCardAmounts(currentMonthExpenseArray);
 }
-
 // Rendering appropriate cards from the stored expense array
 function renderCardAmounts(currentMonthExpenseArray){
         let totalAmount = 0;

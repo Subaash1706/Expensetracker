@@ -1,22 +1,66 @@
-.accordion-button{
+#monthAccordion .card{
+    position: relative;
+    min-height: 55vh;
     cursor: pointer;
+    z-index: 10;
+    background-position: center;
+    background-size: cover;
+    border: none;
+    border-radius: 15px;
+    transition: all 500ms;
 }
-.accordion-header{
-    padding: 15px;
+#monthAccordion .card::after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    background: linear-gradient(155deg, rgb(0, 0, 0) , transparent 50%);
+    z-index: -100;
+    transition: background 500ms;
 }
-.accordion-button,.accordion-item{
-    background-color: #fff;
+#monthAccordion .card:hover::after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -100;
 }
-.accordion-button:focus, .accordion-button:active,.accordion-item:focus,.accordion-item:active{
-    background-color: #fff;
+/* #monthAccordion:hover .card:not(:hover){
+    filter: saturate(0);
+} */
+#monthAccordion .card-body{
+    font-size: 4rem;
+    /* font-weight: 350; */
+    color: white;
+    text-shadow: 2px 5px 5px black;
 }
-.accordion-collapse{
-    transition: all 0.25s;
+#monthAccordion .card:hover{
+    transform: scale(1.05);
+    font-weight: 500;
+    /* box-shadow: 2px 5px 8px black; */
 }
-.accordion-header{
-    background-color: white!important;
+#monthAccordion .card:active{
+    transform: scale(1);
 }
-
-
-
-
+#monthAccordion .cardBackdrop{
+    text-shadow: none;
+    padding: 5px;
+    font-size: 1rem;
+    color: black;
+    font-weight: 500;
+    width: 90%;
+    min-height: 40%;
+    border-radius: 15px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.512);
+    position: absolute;
+    bottom: 2vh;
+    backdrop-filter: blur(15px);
+}
+.cardBackdrop p{
+    background-color: whitesmoke;
+    border-radius: 10px;
+    margin: 10px;
+}
+.cardBackdrop span{
+    font-size: 2rem;
+}

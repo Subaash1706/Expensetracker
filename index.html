@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="./style.css">
 </head>
 <body class="overflow-x-hidden vw-100">
@@ -124,11 +125,12 @@
                         </div>  
                     </div>
                 </li>      
-                <li class="nav-item"><a href="#" class="nav-link text-dark">Download Report</a></li>
+                <!-- <li class="nav-item"><a href="#" class="nav-link text-dark">Download Report</a></li> -->
                 <li class="nav-item"><a href="./pages/expenseHistory.html" class="nav-link text-dark">Expense History</a></li>   
             </ul>
-            <div class="form-switch position-absolute bottom-0 py-2 end-0">
+            <div class="form-switch position-absolute bottom-0 py-3">
                 <input type="checkbox" class="form-check-input" id="switch">
+                <label for="switch" class="py-1" id="switchLabel">Dark mode</label>
             </div>
 
     
@@ -200,7 +202,7 @@
 <!----------------------------------------------------------- Chart ------------------------------------------------------------->
         <div class="col col-lg-3 col-12 p-2 d-flex justify-content-center border border-2 shadow  pb-2 rounded-3" id="chartContainer">
             <div class="chart-container d-flex justify-content-center align-items-center">
-                <div id="chartContainertext" class="text-muted position-absolute z-1">The Chart appears here</div>
+                <div id="chartContainertext" class="text-muted position-absolute z-1">Chart appears here</div>
               <canvas id="myPieChart" class="z-2"></canvas>  
             </div>
         </div>

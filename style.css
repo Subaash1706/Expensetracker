@@ -1,6 +1,25 @@
+:root{
+    --BACKGROUND-COLOR: #fff;
+    --TEXT-COLOR: #000;
+    --BRIGHTNTESS: 1;
+}
+[data-theme = 'dark']{
+    --BACKGROUND-COLOR: #1e1e1e;
+    --TEXT-COLOR: #fff;
+    --BRIGHTNESS: 0.65;
+    transition: background-color 1s ease-in-out;
+}
+:is(.card,.modal-body){
+    filter: brightness(var(--BRIGHTNESS))
+}
 body{
     max-width: 100%!important;
     overflow-x: hidden;
+    background-color: var(--BACKGROUND-COLOR)!important;
+    color: var(--TEXT-COLOR);
+}
+#myPieChart{
+    border: var(--BACKGROUND-COLOR)
 }
 ::-webkit-scrollbar{
     width: 10px;
@@ -20,8 +39,13 @@ body{
     outline: none;
 }
 
+:is(#offcanvas,#offcanvas .nav-item,#offcanvas .nav-link,.accordion-button,.accordion-body,.accordion-collapse,#offcanvas divm){
+    background-color: var(--BACKGROUND-COLOR)!important;
+    color: var(--TEXT-COLOR)!important;
+    transition: background-color 0.5s;
+}
 #offcanvas{
-    transition: all 0.35s;
+    transition: all 0.35s; 
 }
 #offcanvas a, #accordionButton{
     font-size: 20px;
@@ -49,8 +73,16 @@ body{
 .active{
     background-color: gray;
 }
+.form-switch{
+    left: 30px;
+    width:50%;
+}
+.form-switch label{
+    text-align: center;
+}
 #switch{
     font-size: 1.5rem;
+    color: black;
 }
 #navUl li{
     padding: 15px 0 5px 0px;

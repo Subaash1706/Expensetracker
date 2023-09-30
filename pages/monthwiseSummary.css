@@ -1,0 +1,18 @@
+.accordion-button{
+    cursor: pointer;
+}
+.accordion-button,.accordion-item{
+    background-color: #fff;
+}
+.accordion-button:focus, .accordion-button:active,.accordion-item:focus,.accordion-item:active{
+    background-color: #fff;
+}
+.accordion-collapse{
+    transition: all 250ms;
+}
+.accordion-header{
+    background-color: white!important;
+}
+.backButton{
+    text-align: center;
+}
