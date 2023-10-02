@@ -2,10 +2,10 @@ const monthContainer = document.getElementById('monthAccordion');
 const body = document.querySelector('body');
 
 const lsObjArray = [];
-const recordYears = new Set();
+const recordYears = new Set(); // DECLARED A SET TO FILTER OUT THE UNIQUE VALUES OF YEARS PRESENT IN THE STORED ENTRY
 const paraTag = document.createElement('div');
 paraTag.innerHTML = 'Add some data to view yearwise Expense/Income history'
-function fetchLocalStorageData(){
+function fetchLocalStorageData(){ // FETCHES LS DATA AS USUAL
     try{
         const lsArray = localStorage.getItem('expenseArray')
         if(!lsArray.length > 0){
@@ -40,6 +40,8 @@ fetchLocalStorageData()
 function getYearData(date){
     return new Date(date).getFullYear()
 }
+
+// RENDERS CARDS FOR THE EXTRACTED YEARS
 function renderYearCards(recordYearsArray){
     if(recordYearsArray.length > 0){
         const sortedLsObjArray = lsObjArray.sort((item, item2)=>getYearData(item.date)-getYearData(item2.date))
@@ -98,7 +100,6 @@ function backdropData(lsObjArray){
         return accResult
     },[])
 }   
-
 function renderMonths(monthsArray){
     monthsArray.forEach((month)=>{
         const cardContainer = document.createElement('div');

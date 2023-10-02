@@ -115,7 +115,7 @@ function obtainDateInfo(date, lookFor){
     }
 }
 
-// FUNCTION THAT RETURNS THE NAME OF THE MONTH
+// FUNCTION TO THE NAME OF THE MONTH
 function getMonthName(date){
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug","Sep", "Oct", "Nov", "Dec"];
     const monthName = obtainDateInfo(date, 'month');
@@ -158,7 +158,6 @@ function renderExpense(expenseArray){
             reason.textContent = obj.reason;
             reasonAndDate.appendChild(reason);
             const date = document.createElement('div');
-            
             const objDate = obtainDateInfo(obj.date, 'day');
             date.textContent = `${+objDate > 10 ? objDate : `0${objDate}`} ${getMonthName(obj.date)}`
             date.setAttribute('id', 'dashBoardMonth');
@@ -167,17 +166,17 @@ function renderExpense(expenseArray){
             const amountContainer = document.createElement('div');
             amountContainer.setAttribute('id', 'amountContainer')
             const amount = document.createElement('div');
-            amount.classList.add( obj.type === 'Income' ? 'text-success' : 'text-danger', 'dashBoardAmount' );
+            amount.classList.add( obj.type === 'Income' ? 'text-success' : 'text-danger', 'dashBoardAmount' ); // DYNAMIC FONT-COLOR BASED ON THE TYPE OF TRANSACTION MADE
             amount.textContent = `₹${obj.amount}`;
             amountContainer.appendChild(amount);
             amountContainer.classList.add('d-flex', 'flex-row', 'justify-content-center', 'align-items-center')
-            const dotVertical = document.createElement('button')
+            const dotVertical = document.createElement('button')  // OPTIONS ICON ON EVERY ENTRY ON THE DASHBOARD ENTRIES TO EITHER EDIT AN ENTRY OR DELETE THEM ENTIRELY
             dotVertical.classList.add('border-0','bg-light-subtle','position-absolute', 'end-0');
             dotVertical.setAttribute('id', 'moreButton');
             dotVertical.setAttribute('data-bs-toggle', 'dropdown');
             dotVertical.setAttribute('data-bs-target', `#dashBoardDropdownmenu-${index}`)
             dotVertical.innerHTML = `<span class="material-symbols-outlined align-middle">more_vert</span>`;
-            // EDIT/REMOVE LOGIC
+            // EDIT/REMOVE LOGIC FOR INDIVIDUAL DASHBOARD ENTRIES
             const dropDownMenu = document.createElement('ul')
             dropDownMenu.classList.add('dropdown-menu','position-absolute','top-0');
             dropDownMenu.setAttribute('id', `dashBoardDropdownMenu-${index}`)
@@ -206,9 +205,12 @@ function renderExpense(expenseArray){
     renderCardAmounts(currentMonthExpenseArray)
 }
 
+// SELECTS EVERY INDIVIDUAL ENTRY FROM THE OVERALL EXPENSE/INCOME ENTRY DISPLAYED ON DASHBOARD
 const cardbody = document.querySelectorAll('#dashExpenseList');
 cardbody.forEach((item)=>{
+    // ADDING A CLICK EVENT TO EVERY ENTRY, SO AS TO IDENTIFY WHICH OPTION IN THE OPTIONS(EDIT OR DELETE) IS BEING SELECTED
     item.addEventListener('click', (e)=>{
+        // IF THE SELECTED OPTION IS KNOWN TO BE 'EDIT', THEN THE CONTENT WILL BE SET TO EDITABLE AND HENCE THE USER CAN EDIT THE SAME
         if(e.target.textContent === 'Edit amount'){
             const ul = e.target.parentElement;
             const targetId = +(ul.id.split('-')[1]);
@@ -218,6 +220,7 @@ cardbody.forEach((item)=>{
             const currentMonthIndex = expenseArrayHard.length - currentExpenseArray.length
             const targetIndex = currentMonthIndex + targetId
             amountField.addEventListener('keypress', (e)=>{
+                // ONCE THE CONTENT IS EDITED, IT IS THEN WAITS FOR A 'ENTER' KEY EVENT. IF THAT HAPPENS, THE INDIVIDUAL ENTRY GETS REPLACED BY THE NEW ENTRY AND SO THE EXPENSE ARRAY GETS UPDATED.
                 if(e.key === 'Enter'){
                     e.preventDefault();
                     const changedValue = e.target.textContent[0] === '₹' ? ((e.target.textContent).split('₹'))[1] : e.target.textContent;
@@ -249,9 +252,10 @@ cardbody.forEach((item)=>{
                 }
             })
         }
+        // LOGIC FOR THE DELETION OF AN INDIVIDUAL ENTRY
         else if(e.target.textContent === 'Delete'){
             const ul = e.target.parentElement;
-            const targetId = +(ul.id.split('-')[1]);
+            const targetId = +(ul.id.split('-')[1]); // DELETION ACHEIVED THROUGH ARRAY SPLICING. I DIDN'T COME UP WITH ANY OTHER BETTER APPROACHES TO BE HONEST.
             const currentExpenseArray = convertObjtoArr(filterByCurrentMonthandYear(renderObject(expenseArrayHard)))
             const currentMonthIndex = expenseArrayHard.length - currentExpenseArray.length
             const targetIndex = currentMonthIndex + targetId;
@@ -261,7 +265,7 @@ cardbody.forEach((item)=>{
 })
 })
 
-// Rendering appropriate cards from the stored expense array
+// UPDATING THE 'BALANCE CARD', 'EXPENSE CARD' AND THE 'INCOME CARD' ON THE DASHBOARD BASED ON THE VALUES FROM THE SAVED ENTRIES
 function renderCardAmounts(currentMonthExpenseArray){
         let totalAmount = 0;
         let totalExpense = 0;
@@ -290,11 +294,11 @@ function renderCardAmounts(currentMonthExpenseArray){
     cardExpense.textContent =  `₹${totalExpense.toLocaleString('en-IN')}`
 }
 
-
-var myPieChart; // Declare a variable to hold the chart instance
+// PIE CHART SECTION
+var myPieChart;
 function renderChart(chartArr) {
     if (myPieChart) {
-        myPieChart.destroy(); // Destroy the previous chart instance
+        myPieChart.destroy(); // CLEAR ANY PREVIOUS INSTANCES OF PIECHARTS ON THE CANVAS TO AVOID OVERALAPPING
     }
     chartText.innerHTML = '';
     var ctx = document.getElementById('myPieChart').getContext('2d');
@@ -309,13 +313,15 @@ function renderChart(chartArr) {
         }]
     };
     var config = {
-        type: 'pie',    // Type of chart (pie chart in this case)
-        data: data      // Data for the chart
+        type: 'pie',
+        data: data      
     };
-    myPieChart = new Chart(ctx, config); // Store the new chart instance
+    myPieChart = new Chart(ctx, config); // CREATING NEW CHART INSTANCE BASED ON THE PREVIOUS VALUES AND CONFIGS
 }
 
+// FORM TO LET USER ADD ANY EXPENSE/INCOME AND LETS HIM/HER TO STORE THE VALUES PERMANANTLY OVER THE LOCALSTORAGE.
 formModal.addEventListener('submit',(e)=>{ 
+    // FORM VALIDATION
     if(!formModal.checkValidity() && !addAmountInput.classList.contains(bgDangerSubtle,bgSuccessSubtle)){
         e.preventDefault()
         formModal.classList.add('was-validated')
@@ -333,12 +339,13 @@ formModal.addEventListener('submit',(e)=>{
         addAmountChooseButton.classList.add('btn-outline-secondary')
         toPush.forEach(item=>{indExpenseArr.push(item.value);item.value=''})
         expenseArrayHard.push(indExpenseArr)
+        // ONCE THE FORM DATA HAS BEEN COLLECTED, THE DATA IS THEN USED TO UPDATE THE LOCALSTORAGE AND THEN IS USED TO RE-RENDER CONTENTS ON THE DASHBOARD
         renderExpense(renderObject(expenseArrayHard))  
         updateLocalstorage(expenseArrayHard, 'expense')
     } 
 })
 
-// Handle image upload through Tesseract js
+// SIMILAR TO A FORM, BUT COLLECTS EXPENSE/INCOME DATA THROUGH THE IMAGES UPLOADED BY THE USER. IMAGES MAY BE BILLS OF VARIOUS KINDS. THIS IS AN EXPERIMENTAL FEATURE AND WON'T WORK PROPERLY AND IS HIGHLY DEPENDANT ON THE TESSERACTjS LIBRARY.
 const fileInput = document.querySelector('#fileUpload')
 const imgPreview  = document.getElementById('previewImg')
 const imgModalBody = document.getElementById('imageModalFooter')
@@ -376,11 +383,11 @@ fileInput.addEventListener('change',()=>{
         progressBarContainer.appendChild(progressBar)
         scannerCol.appendChild(progressBarContainer)
         scannerCol.appendChild(progressBarStatus)
-
+        // TEXT RECOGNITION PHASE
         Tesseract.recognize(
             indFile,
             'eng',
-            { logger: m => {
+            { logger: m => { // LOGGER INCLUES DATA RELATED TO THE LOADING PHASE
                 progressBar.style.width = `${(m.progress) * 100}%`;
                 progressBarStatus.innerHTML = m.status.charAt(0).toUpperCase() + m.status.slice(1)
                 progressBarStatus.innerHTML === 'Recognizing text' && progressBar.style.width === '100%' ?
@@ -388,7 +395,7 @@ fileInput.addEventListener('change',()=>{
                 document.getElementById('revealButton')? document.getElementById('revealButton').addEventListener('click',()=>{
                     scannedContent.classList.remove('visually-hidden')
                 }):null;
-            } }
+            } }// ACTUAL DATA IS OBTAINED AS A PROMISE WHICH IS THEN PARSED USING THENABLES
           ).then(({ data: { text } }) => {
             scannedContent.textContent = text;
             const badgeArray = text.split(" ")
@@ -432,9 +439,6 @@ fileInput.addEventListener('change',()=>{
             })
             const inpArray = [reason, amount, dateInp, submitButton]
             let count = 0;
-            // inpGrpButton.onclick = ()=>inpGrpButton.classList.add('clicked')
-            // const inpGrpButton = document.querySelectorAll('.inpGrpButton')
-
             inpArray.forEach((item,idx)=>{
                 const inpGrp = document.createElement('div')
                 inpGrp.classList.add('input-group','my-2');
@@ -442,7 +446,6 @@ fileInput.addEventListener('change',()=>{
                 inpGrpButton.classList.add('btn','btn-outline-success','inpGrpButton')
                 inpGrpButton.setAttribute('data-bs-toggle','button')
                 inpGrpButton.innerHTML = 'OK'
-                // inpGrpButton.addEventListener('click',()=>{console.log(count);item.classList.contains('active') ? count += 1 : null})
                 if(idx < 3){
                     inpGrp.appendChild(item)
                     inpGrp.appendChild(inpGrpButton)
@@ -469,13 +472,14 @@ fileInput.addEventListener('change',()=>{
     }
 })
 
+// FOLLOWING ARE CODE FOR DUES SECTION
 dueDropdown.addEventListener('click', (e)=>{
     if(e.target.id === 'everyMonth'){
         dueDropdown.classList.add('selected');
     }
 })
 
-const dueObjArr = JSON.parse(localStorage.getItem('dueArray')) || [];
+const dueObjArr = JSON.parse(localStorage.getItem('dueArray')) || []; // LOCALSTORAGE TAKES CARE OF DUESarray IN ADDITION TO THE OVERALL EXPENSE/ INCOME ARRAY
 const dueCardContainer = document.querySelector('#dueCardSubContainer')
 dueForm.addEventListener('submit', (e)=>{
     e.preventDefault();
@@ -486,8 +490,9 @@ dueForm.addEventListener('submit', (e)=>{
     fObj['dateDifference'] = +findDaysDifference(fObj.dueDate);
     !dueDropdown.classList.contains('selected') ? fObj['reminder'] = 'once' : (fObj['reminder'] = 'every_month', dueDropdown.classList.remove('selected'));
     updateLocalstorage(dueObjArr, 'due');
-    // renderDueCards(dueObjArr)
 })
+
+// FROM THE DUESARRAY, CARDS ARE BEING RENDERED
 function renderDueCards(dueObjArr){
     dueCardContainer.innerHTML = '';
     dueObjArr.forEach((obj, index)=>{
@@ -513,6 +518,7 @@ function renderDueCards(dueObjArr){
             }
             else if(key === 'dateDifference'){
                 const diffSpan = document.createElement('span');
+                // LOGIC TO DYNAMICALLY CHANGE THE BG-COLOR OF THE CARD BASED ON THE NUMBER OF DAYS LEFT FOR THE DUE DATE
                 diffSpan.textContent = ` (${obj[key] >= 0 ? `${Math.ceil(obj[key])} ${Math.ceil(obj[key]) > 1 ? 'days' : 'day'}` : `due past ${Math.floor(Math.abs(obj[key]))} ${Math.floor(Math.abs(obj[key])) > 1 ? 'days' : 'day'}`})`
                 dueDetailsContainer.lastChild.appendChild(diffSpan)
                 if(+obj[key] < 15 && +obj[key] > 5){
@@ -565,10 +571,8 @@ function renderDueCards(dueObjArr){
                             dueObjArr.push(obj)
                             removeCard(e);
                             updateLocalstorage(dueObjArr, 'due');
-                            // renderDueCards(dueObjArr)
                         }
                         else removeCard(e) 
-                        // removeCard(e);//coditionally remove
                     }
                 }
                 dueDeleteButton.onclick = (e)=>{removeCard(e)}
@@ -577,7 +581,6 @@ function renderDueCards(dueObjArr){
                     const cardElement = parent.parentElement;
                     dueObjArr.splice(cardElement.id, 1);
                     updateLocalstorage(dueObjArr, 'due')
-                    // renderDueCards(dueObjArr)
                 }
                 dueCard.appendChild(dueDoneButton)
                 dueCard.appendChild(dueDeleteButton)
@@ -586,14 +589,17 @@ function renderDueCards(dueObjArr){
         dueCardContainer.appendChild(dueCard)
     }) 
 }
-renderDueCards(dueObjArr)
+renderDueCards(dueObjArr) // CALLING THE FUNCTION IN THE GLOBAL SCOPE, SO THAT THE CARDS ARE RENDERED AS SOON AS THE APPLICATION LOADS FOR THE FIRST TIME
 
+// FUNCTION TO CALCULTE DIFFERENCE IN NUMBER OF DAYS (TARGET DATE - CURRENT DATE)
 function findDaysDifference(targetDate){
     const today = new Date()
     const target = new Date(targetDate)
     const difference = (target-today) / ( 1000 * 60 * 60 * 24 )
     return difference;
 }
+
+// GENERAL FUNCTION TO BE CALLED AT VARIOUS PLACES IN THE APPLICATION TO UPDATE/ SET APPROPRIATE VALUES IN THE LOCALSTORAGE
 function updateLocalstorage(array, type){
     switch(type){
         case 'expense':
@@ -608,6 +614,7 @@ function updateLocalstorage(array, type){
       
 }   
 
+// RESET BUTTON RESETS THE DASHBOARD AND WIPES OUT EVERY DATE FROM THE LOCALSTORAGE
 resetButtons.forEach(item=>{
     item.addEventListener('click',(e)=>{
         e.target.innerHTML === 'Yes' ? (localStorage.removeItem('expenseArray'),renderExpense(expenseArrayHard),location.reload()) : null

@@ -1,6 +1,7 @@
 const months = ["January", "February", "March", "April", "May", "June", "July", "August","September", "October", "November", "December"];
 const monthContainer = document.getElementById('monthAccordion');
 
+// FUNCTION TO GET THE CARD DETAILS PASSED AS A PARAM FROM ANOTHER PAGE
 function getUrlParams(searchFor){
     const param = new URLSearchParams(window.location.search)
     return param.get(searchFor);
@@ -8,11 +9,13 @@ function getUrlParams(searchFor){
 const cardChosen = getUrlParams('card');
 document.getElementById('navbarText').textContent = `Monthwise summary - ${cardChosen}`;
 
+// FUNCTION THAT RETURNS YEAR AND MONTH INFO OF THE ARGUMENT
 function getDateData(date, searchFor){
     if(searchFor === 'year') return new Date(date).getFullYear()
     else if(searchFor === 'month') return new Date(date).getMonth();
 }
 
+// FUNCTION TO ACCESS THE LOCALSTORAGE
 const lsObjArray = [];
 function fetchLocalStorageData(){
     try{
@@ -39,9 +42,10 @@ function fetchLocalStorageData(){
 }
 fetchLocalStorageData();
 
+// FILTERING CURRENT MONTH'S DATA FROM THE OVERALL RECORD
 const yearSpecificArray = lsObjArray.filter((obj)=>{return +getDateData(obj.date, 'year') === +cardChosen})
 
-
+// RENDERING INDIVIDUAL ACCORDION FOR EVERY MONTH OF THE YEAR AND PROVIDING APPROPRATE DATA INTO THE ACCORDION BODY
 function renderAccordion(){
     const accCont = document.createElement('div')
     accCont.classList.add('accordion','mt-3','w-75')
@@ -100,6 +104,7 @@ accordionButton.forEach((button, accordionIndex)=>{
     })
 })
 
+// DATA TO BE DISPLAYED IN FORM OF CARDS INSIDE THE ACCORDION BODY
 function renderCards(currentMonthExpenseArray){
     const cardMainContainer = document.createElement('div')
     cardMainContainer.classList.add('row','w-100')
