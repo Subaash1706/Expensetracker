@@ -28,12 +28,11 @@ const bgSuccessSubtle = 'bg-success-subtle'
 const darkSwitch = document.getElementById('switch')
 const dueForm = document.querySelector('#dueForm')
 const dueDropdown = document.querySelector('#dpdMenu')
+// darkSwitch.addEventListener('click', ()=>{
+//     if(darkSwitch.checked) body.setAttribute('data-theme','dark')
+//     else body.removeAttribute('data-theme')
+// })
 
-
-darkSwitch.addEventListener('click', ()=>{
-    if(darkSwitch.checked) body.setAttribute('data-theme','dark')
-    else body.removeAttribute('data-theme')
-})
 
 addAmountChooseLi.forEach(item=>{
     item.addEventListener('click',(e)=>{
@@ -46,21 +45,20 @@ addAmountChooseLi.forEach(item=>{
 )
 
 addAmountCloseButton.addEventListener('click',(e)=>e.preventDefault())
-chartText.textContent = 'Chart appears here'
-// Date for Dashboard
+chartText.textContent = 'Chart appears here' //FALBACK TEXT FOR CHART CONTAINER
+
+// REUSABLE DATE OBJECT
 const date=new Date();
 htmlDate.classList.add('d-none','d-md-block')
 const currentMonth =  Number(date.getMonth())+1 < 10 ? `0${Number(date.getMonth())+1}` : String(Number(date.getMonth()+1))
-const today = `${
-    Number(date.getDate()) < 10 ? `0${date.getDate()}` : String(date.getDate())}-${currentMonth}-${String(date.getFullYear())}`
+const today = `${Number(date.getDate()) < 10 ? `0${date.getDate()}` : String(date.getDate())}-${currentMonth}-${String(date.getFullYear())}`
 htmlDate.innerHTML = `Expense/Income history as of: ${today}`
 
 
-const expenseArrayHard = (JSON.parse(localStorage.getItem('expenseArray'))) || [] //Important array
-// expenseArrayHard.length > 0 ? (renderExpense(renderObject(expenseArrayHard))) : renderExpense(renderObject(expenseArrayHard))
-renderExpense(renderObject(expenseArrayHard))
+const expenseArrayHard = (JSON.parse(localStorage.getItem('expenseArray'))) || [] //ACTUAL EXPENSE/INCOME ARRAY TO BE RENDERED
+renderExpense(renderObject(expenseArrayHard)) //FUNCTION CALLED TO RENDER EXPENSE/INCOME DYNAMICALLY
 
-
+//FUNCTION TO CONSTRUCT AN OBJECT OUT OF THE STORED ARRAY
 function renderObject(expenseArrayHard){
     expenseArrayKeys = ['type', 'reason', 'date', 'amount'];
     const expenseObjArray = [];
@@ -68,7 +66,6 @@ function renderObject(expenseArrayHard){
         expenseObj = {};
         expenseArrayKeys.forEach((key,index)=>{
             expenseObj[key] = item[index];
-        
         })
         expenseObjArray.push(expenseObj)
     })
@@ -80,7 +77,7 @@ accordionButton.addEventListener('click',()=>{
     arrow.classList.toggle('activeArrow')
 })
 
-// Filters Expense/Income on Dashboard
+// LOGIC TO IDENTIFY THE TYPE OF FILTER ACTION TO BE PERFORMED
 dropdownMenu.forEach(item=>{
     item.addEventListener('click',(e)=>{
         dropdownToggleButton.classList.add('active')
@@ -89,21 +86,22 @@ dropdownMenu.forEach(item=>{
     })
 })
 
+//FILTER LOGIC
 function filterExpenseArray(targetValue, expenseArray){
     const filteredExpenseArray = (targetValue === 'All' ? expenseArray : 
     (targetValue === 'Expense' ? expenseArray.filter(item=>item[0] === 'Expense') :
     expenseArray.filter(item=>item[0] === 'Income')));
     renderExpense(renderObject(filteredExpenseArray))
-   
 }
 
-// Checks whether the filter is ON and based on the condition, the array is being rendered on dashboard
+// CHECKS FOR THE TRUTHINESS OF THE FILTER BUTTON AND RENDERS APPROPRIATE DATA ON THE DASHBOARD
 dropdownToggleButton.addEventListener('click',(e)=>{
     if (!e.target.classList.contains('active')) {
         renderExpense(renderObject(expenseArrayHard))       
     }
 })
 
+// FUNCTION THAT RETURNS DYNAMIC DATE INFO
 function obtainDateInfo(date, lookFor){
     switch(lookFor){
         case 'month':
@@ -116,11 +114,15 @@ function obtainDateInfo(date, lookFor){
             return new Date(date);
     }
 }
+
+// FUNCTION THAT RETURNS THE NAME OF THE MONTH
 function getMonthName(date){
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug","Sep", "Oct", "Nov", "Dec"];
     const monthName = obtainDateInfo(date, 'month');
     return months[+monthName];
 }
+
+// FILTERS THE CURRENT MONTH ENTRIES FROM THE OVERALL STORED EXPENSE/INCOME ARRAY
 function filterByCurrentMonthandYear(expenseArray){
     return expenseArray.filter((item)=> +obtainDateInfo(item.date, 'month')+1 === +currentMonth && obtainDateInfo(item.date, 'year')===new Date().getFullYear());
 }
@@ -135,11 +137,14 @@ function convertObjtoArr(currentMonthExpenseArrayObj){
         })
         return currentMonthExpenseArray;
 }
+
+// FUNCTION TO RENDER THE EXPENSE/INCOME DATA DYNAMICALLY ON THE DASHBOARD
 function renderExpense(expenseArray){
     const currentMonthExpenseArrayObj =  filterByCurrentMonthandYear(expenseArray)
     const currentMonthExpenseArray = convertObjtoArr(currentMonthExpenseArrayObj)
     if(currentMonthExpenseArrayObj.length > 0){
         expenseList.innerHTML = '';
+        // FOLLOWING ARE DYNAMIC RENDERING LOGIC FOR THE DASHBOARD HISTORY
         currentMonthExpenseArrayObj.forEach((obj, index)=>{
             const cardContainer = document.createElement('div');
             cardContainer.classList.add('card','mb-2', 'mx-0','mx-md-2');
@@ -172,7 +177,7 @@ function renderExpense(expenseArray){
             dotVertical.setAttribute('data-bs-toggle', 'dropdown');
             dotVertical.setAttribute('data-bs-target', `#dashBoardDropdownmenu-${index}`)
             dotVertical.innerHTML = `<span class="material-symbols-outlined align-middle">more_vert</span>`;
-            // Edit/Remove logic
+            // EDIT/REMOVE LOGIC
             const dropDownMenu = document.createElement('ul')
             dropDownMenu.classList.add('dropdown-menu','position-absolute','top-0');
             dropDownMenu.setAttribute('id', `dashBoardDropdownMenu-${index}`)

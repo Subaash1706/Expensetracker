@@ -22,7 +22,6 @@
         </div>
     </div>
 </div>
-
 <!---------------------------------------- Form to add expense/income manually ------------------------------------------------->
 <form class="modal fade" id="modal" data-bs-backdrop="static" novalidate>
     <div class="modal-dialog modal-dialog-centered">
@@ -91,7 +90,6 @@
         </div>
     </div>
 </form>
-
 <!------------------------------------------------Navbar and offcanvas elements ------------------------------------------------>
 <div class="navbar p-2 bg-light position-sticky top-0 z-3 shadow-sm" id="navBarContainer">
     <nav class="navbar-nav">
@@ -128,14 +126,11 @@
                 <!-- <li class="nav-item"><a href="#" class="nav-link text-dark">Download Report</a></li> -->
                 <li class="nav-item"><a href="./pages/expenseHistory.html" class="nav-link text-dark">Expense History</a></li>   
             </ul>
-            <div class="form-switch position-absolute bottom-0 py-3">
+            <!-- <div class="form-switch position-absolute bottom-0 py-3">
                 <input type="checkbox" class="form-check-input" id="switch">
                 <label for="switch" class="py-1" id="switchLabel">Dark mode</label>
-            </div>
-
-    
+            </div> -->
 </div>
-
 <!-------------------------------------------------------- Body content --------------------------------------------------------->
 <div class="container-fluid mt-3">
     <div class="row px-3 d-flex justify-content-start">
@@ -196,11 +191,6 @@
                     
                 </div>
 <!----------------------------------------------------------- Chart ------------------------------------------------------------->
-            <!-- <div class="col col-lg-5 col-md-8 mx-md-auto mb-2 p-0 d-flex justify-content-center border border-2 shadow pb-3 rounded-3" id="chartContainer">
-                <div class="chart-container d-flex justify-content-center align-items-center">
-                    <div id="chartContainertext" class="text-muted position-absolute z-1">Chart appears here</div>
-                <canvas id="myPieChart" class="z-2"></canvas>  
-            </div> -->
             <div class="col col-lg-5 mx-md-auto col-md-8 mb-2" id="chartContainer">
                 <div class="card" style="background-color: #fefae07a;">
                     <div class="card-body d-flex justify-content-center align-items-center chart-container">
@@ -208,8 +198,8 @@
                         <canvas id="myPieChart" class="z-2"></canvas>  
                     </div>
                 </div>
-                
             </div>
+<!------------------------------------------------------- Dues section ---------------------------------------------------------->
             <div class="col col-lg-7 col-md-8 mx-auto mb-2 mb-lg-0">
                 <div class="card">
                     <div class="card-body">
@@ -231,8 +221,7 @@
                         </div>
                         <div class="container">
                             <div class="row pb-2" id="dueCard">
-                                <div class="col col-12 d-flex flex-row flex-wrap" id="dueCardSubContainer">
-                                    
+                                <div class="col col-12 d-flex flex-row flex-wrap" id="dueCardSubContainer">  
                                 </div>
                             </div>
                         </div>
@@ -301,13 +290,6 @@
     </div>
     </div>
 </div>
-
-
-
-
-<!-- <div class="row px-md-3 mt-4 d-flex justify-content-center pe-0 me-0">
-
-</div> -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <script src='https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js'></script>
