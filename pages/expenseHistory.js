@@ -41,7 +41,8 @@ function getYearData(date){
     return new Date(date).getFullYear()
 }
 function renderYearCards(recordYearsArray){
-    const sortedLsObjArray = lsObjArray.sort((item, item2)=>getYearData(item.date)-getYearData(item2.date))
+    if(recordYearsArray.length > 0){
+        const sortedLsObjArray = lsObjArray.sort((item, item2)=>getYearData(item.date)-getYearData(item2.date))
     const backData = backdropData(sortedLsObjArray)
     recordYearsArray.forEach((record, index)=>{
         const cardContainer = document.createElement('div');
@@ -66,7 +67,11 @@ function renderYearCards(recordYearsArray){
         cardContainer.appendChild(cardBody)
         monthContainer.appendChild(cardContainer);
         cardContainer.style.backgroundImage = `url(../images/vectors/bg-${Math.floor(Math.random() * 6)}.jpg)`
-    })
+    })    
+    }
+    else{
+        monthContainer.innerHTML = '<p>No data to display Yearwise summary. Add data from the dashboard to view summary</p>'
+    }
 }
 const yearCard = document.querySelectorAll('.yearCard');
 yearCard.forEach((card)=>{

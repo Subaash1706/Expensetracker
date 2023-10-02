@@ -22,27 +22,27 @@ body{
     border: var(--BACKGROUND-COLOR)
 }
 ::-webkit-scrollbar{
-    width: 10px;
+    width: 8px;
 }
 ::-webkit-scrollbar-track{
-    background-color: rgba(183, 180, 180, 0.361);
+    background-color: rgba(183, 180, 180, 0.55);
 }
 ::-webkit-scrollbar-thumb{
-    background-color: rgba(0, 0, 0, 0.401);
+    background-color: rgba(0, 0, 0, 0.119);
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover{
-    background-color: rgba(0, 0, 0, 0.703); 
+    background-color: rgba(14, 160, 217, 0.219); 
 }
 .accordionButton:focus, .accordionButton:active{
     border: none;
     outline: none;
 }
 
-:is(#offcanvas,#offcanvas .nav-item,#offcanvas .nav-link,.accordion-button,.accordion-body,.accordion-collapse,#offcanvas divm){
+:is(#offcanvas,#offcanvas .nav-item,#offcanvas .nav-link,.accordion-button,.accordion-body,.accordion-collapse,#offcanvas div){
     background-color: var(--BACKGROUND-COLOR)!important;
     color: var(--TEXT-COLOR)!important;
-    transition: background-color 0.5s;
+    transition: all 0.5s;
 }
 #offcanvas{
     transition: all 0.35s; 
@@ -103,6 +103,7 @@ body{
 #dashExpenseList{
     max-height: 450px;
     overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 .dropdown-item{
     cursor: pointer;
@@ -136,4 +137,33 @@ body{
     right: 15px;
     transform: translateY(5px);
     transition: all 1s;
+}
+#dashBoardReason{
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+#dashBoardMonth{
+    font-weight: 400;
+    color: rgb(165, 165, 165);
+    font-size: 0.85rem;
+}
+.dashBoardAmount{
+    font-size: 2.5rem;
+    font-weight: 200;
+    padding-right: 1rem;
+
+}
+#moreButton{
+    background-color: var(--BACKGROUND-COLOR)!important;
+    background: rgba(255, 255, 0, 0)!important; 
+
+}
+#dashExpenseList .card{
+    scroll-behavior: smooth;
+}
+#dueCard{
+    min-height: 25vh;
+    max-height: 27vh;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
 }

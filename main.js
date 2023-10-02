@@ -17,6 +17,7 @@ const addAmountCloseButton = document.querySelector('#addAmountCloseButton');
 const cardTotalAmount = document.querySelector('#cardTotalAmount');
 const cardIncome = document.querySelector('#cardIncome');
 const cardExpense = document.querySelector('#cardExpense');
+const chartText = document.getElementById('chartContainertext')
 const formModal = document.querySelector('#modal')
 const resetArrow = document.getElementById('resetArrow')
 const resetButtons = document.querySelectorAll('#resetButtons>button')
@@ -25,6 +26,9 @@ const btnSuccess = 'btn-success'
 const bgDangerSubtle = 'bg-danger-subtle'
 const bgSuccessSubtle = 'bg-success-subtle'
 const darkSwitch = document.getElementById('switch')
+const dueForm = document.querySelector('#dueForm')
+const dueDropdown = document.querySelector('#dpdMenu')
+
 
 darkSwitch.addEventListener('click', ()=>{
     if(darkSwitch.checked) body.setAttribute('data-theme','dark')
@@ -42,19 +46,35 @@ addAmountChooseLi.forEach(item=>{
 )
 
 addAmountCloseButton.addEventListener('click',(e)=>e.preventDefault())
-
+chartText.textContent = 'Chart appears here'
 // Date for Dashboard
 const date=new Date();
 htmlDate.classList.add('d-none','d-md-block')
 const currentMonth =  Number(date.getMonth())+1 < 10 ? `0${Number(date.getMonth())+1}` : String(Number(date.getMonth()+1))
 const today = `${
-    Number(date.getDate()) < 10 ? `0${date.getDate()}` : String(date.getDate())
-}-${currentMonth}
--${String(date.getFullYear())}`
+    Number(date.getDate()) < 10 ? `0${date.getDate()}` : String(date.getDate())}-${currentMonth}-${String(date.getFullYear())}`
 htmlDate.innerHTML = `Expense/Income history as of: ${today}`
 
+
 const expenseArrayHard = (JSON.parse(localStorage.getItem('expenseArray'))) || [] //Important array
-expenseArrayHard.length > 0 ? renderExpense(expenseArrayHard) : null
+// expenseArrayHard.length > 0 ? (renderExpense(renderObject(expenseArrayHard))) : renderExpense(renderObject(expenseArrayHard))
+renderExpense(renderObject(expenseArrayHard))
+
+
+function renderObject(expenseArrayHard){
+    expenseArrayKeys = ['type', 'reason', 'date', 'amount'];
+    const expenseObjArray = [];
+    expenseArrayHard.forEach((item)=>{
+        expenseObj = {};
+        expenseArrayKeys.forEach((key,index)=>{
+            expenseObj[key] = item[index];
+        
+        })
+        expenseObjArray.push(expenseObj)
+    })
+    return expenseObjArray
+}
+
 
 accordionButton.addEventListener('click',()=>{
     arrow.classList.toggle('activeArrow')
@@ -73,58 +93,169 @@ function filterExpenseArray(targetValue, expenseArray){
     const filteredExpenseArray = (targetValue === 'All' ? expenseArray : 
     (targetValue === 'Expense' ? expenseArray.filter(item=>item[0] === 'Expense') :
     expenseArray.filter(item=>item[0] === 'Income')));
-    renderExpense(filteredExpenseArray)
+    renderExpense(renderObject(filteredExpenseArray))
    
 }
 
 // Checks whether the filter is ON and based on the condition, the array is being rendered on dashboard
 dropdownToggleButton.addEventListener('click',(e)=>{
     if (!e.target.classList.contains('active')) {
-        renderExpense(expenseArrayHard)       
+        renderExpense(renderObject(expenseArrayHard))       
     }
 })
-// Renders income/expense cards on dashboard dynamically 
-function renderExpense(expenseArray){
-    const currentMonthExpenseArray = [];
-    expenseArray.forEach(item=>{
-        if((item[2].split('-')[1] === currentMonth) && Number(item[2].split('-')[0]) === (new Date().getFullYear())){
-            currentMonthExpenseArray.push(item)
-        }
-    })
-    expenseList.innerHTML = '';
-    renderChart(currentMonthExpenseArray)
-    const deleteButton = document.createElement('span');
-    deleteButton.classList.add('material-symbols-outlined')
-    deleteButton.textContent = 'delete'
-    currentMonthExpenseArray.forEach(arr => {
-        const cardContainer = document.createElement('div');
-        cardContainer.classList.add('card', 'd-flex', 'flex-column', 'mb-3','position-relative');
-        const cardImage = document.createElement('img');
-        cardImage.classList.add('position-absolute','end-0','me-md-3','top-25','me-3')
-        const cardContent = document.createElement('div');
-        cardContent.classList.add('card-body', 'd-flex', 'flex-md-row', 'flex-column','flex-lg-row', 'justify-content-between');
-        arr.forEach((item,index) => {
-            const cardItem = document.createElement('div');
-            cardItem.classList.add('card-text', 'col-12','col-md-2','mr-2');
-            if(index===0){
-                cardImage.src = `./images/${item}.png`;
-                cardItem.textContent = item;
-            }
-            else if(index ===3 ){
-                cardItem.textContent = `₹${item}`
-            }
-            else{
-                cardItem.textContent = item;
-            }
-            
-            cardContent.appendChild(cardItem);
-            cardContent.appendChild(cardImage);
-        });
-        cardContainer.appendChild(cardContent);
-        expenseList.appendChild(cardContainer);
-    });
-    renderCardAmounts(currentMonthExpenseArray);
+
+function obtainDateInfo(date, lookFor){
+    switch(lookFor){
+        case 'month':
+            return new Date(date).getMonth();
+        case 'year': 
+            return new Date(date).getFullYear();
+        case 'day': 
+            return new Date(date).getDate();
+        default: 
+            return new Date(date);
+    }
 }
+function getMonthName(date){
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug","Sep", "Oct", "Nov", "Dec"];
+    const monthName = obtainDateInfo(date, 'month');
+    return months[+monthName];
+}
+function filterByCurrentMonthandYear(expenseArray){
+    return expenseArray.filter((item)=> +obtainDateInfo(item.date, 'month')+1 === +currentMonth && obtainDateInfo(item.date, 'year')===new Date().getFullYear());
+}
+function convertObjtoArr(currentMonthExpenseArrayObj){
+    const currentMonthExpenseArray = [];
+        currentMonthExpenseArrayObj.forEach((expenseObj)=>{
+            const arr = [];
+            for(const key in expenseObj){
+                arr.push(expenseObj[key])
+            }
+            currentMonthExpenseArray.push(arr)
+        })
+        return currentMonthExpenseArray;
+}
+function renderExpense(expenseArray){
+    const currentMonthExpenseArrayObj =  filterByCurrentMonthandYear(expenseArray)
+    const currentMonthExpenseArray = convertObjtoArr(currentMonthExpenseArrayObj)
+    if(currentMonthExpenseArrayObj.length > 0){
+        expenseList.innerHTML = '';
+        currentMonthExpenseArrayObj.forEach((obj, index)=>{
+            const cardContainer = document.createElement('div');
+            cardContainer.classList.add('card','mb-2', 'mx-0','mx-md-2');
+            const cardBody = document.createElement('div');
+            cardBody.classList.add('card-body', 'd-flex', 'justify-content-between', 'align-items-center');
+            cardBody.setAttribute('id', 'dashCardBody')
+            const reasonAndDate = document.createElement('div');
+            reasonAndDate.classList.add('v-stack');
+            const reason = document.createElement('div');
+            reason.setAttribute('id', 'dashBoardReason');
+            reason.textContent = obj.reason;
+            reasonAndDate.appendChild(reason);
+            const date = document.createElement('div');
+            
+            const objDate = obtainDateInfo(obj.date, 'day');
+            date.textContent = `${+objDate > 10 ? objDate : `0${objDate}`} ${getMonthName(obj.date)}`
+            date.setAttribute('id', 'dashBoardMonth');
+            reasonAndDate.appendChild(date);
+            cardBody.appendChild(reasonAndDate);
+            const amountContainer = document.createElement('div');
+            amountContainer.setAttribute('id', 'amountContainer')
+            const amount = document.createElement('div');
+            amount.classList.add( obj.type === 'Income' ? 'text-success' : 'text-danger', 'dashBoardAmount' );
+            amount.textContent = `₹${obj.amount}`;
+            amountContainer.appendChild(amount);
+            amountContainer.classList.add('d-flex', 'flex-row', 'justify-content-center', 'align-items-center')
+            const dotVertical = document.createElement('button')
+            dotVertical.classList.add('border-0','bg-light-subtle','position-absolute', 'end-0');
+            dotVertical.setAttribute('id', 'moreButton');
+            dotVertical.setAttribute('data-bs-toggle', 'dropdown');
+            dotVertical.setAttribute('data-bs-target', `#dashBoardDropdownmenu-${index}`)
+            dotVertical.innerHTML = `<span class="material-symbols-outlined align-middle">more_vert</span>`;
+            // Edit/Remove logic
+            const dropDownMenu = document.createElement('ul')
+            dropDownMenu.classList.add('dropdown-menu','position-absolute','top-0');
+            dropDownMenu.setAttribute('id', `dashBoardDropdownMenu-${index}`)
+            const dropDownItemKeys = ['Edit description', 'Edit amount', 'Delete'];
+            for(let i =0; i< dropDownItemKeys.length; i++){
+                const dropDownItem = document.createElement('li');
+                dropDownItem.classList.add('dropdown-item');
+                dropDownItem.textContent = dropDownItemKeys[i];
+                dropDownItem.setAttribute('id', 'dashBoardDropdownItem');
+                dropDownMenu.appendChild(dropDownItem)
+            }
+            amountContainer.appendChild(dotVertical);
+            amountContainer.appendChild(dropDownMenu);
+            cardBody.appendChild(amountContainer);
+            cardContainer.appendChild(cardBody);
+            expenseList.appendChild(cardContainer);
+        })
+    }
+    else{
+        expenseList.innerHTML =  '';
+        const noItems = document.createElement('p');
+        noItems.innerHTML = 'No Expense/Income record for the current month';
+        expenseList.appendChild(noItems)
+    }
+    renderChart(currentMonthExpenseArray)
+    renderCardAmounts(currentMonthExpenseArray)
+}
+
+const cardbody = document.querySelectorAll('#dashExpenseList');
+cardbody.forEach((item)=>{
+    item.addEventListener('click', (e)=>{
+        if(e.target.textContent === 'Edit amount'){
+            const ul = e.target.parentElement;
+            const targetId = +(ul.id.split('-')[1]);
+            const amountField = (ul.parentElement).firstChild;
+            amountField.setAttribute('contenteditable', 'true');
+            const currentExpenseArray = convertObjtoArr(filterByCurrentMonthandYear(renderObject(expenseArrayHard)))
+            const currentMonthIndex = expenseArrayHard.length - currentExpenseArray.length
+            const targetIndex = currentMonthIndex + targetId
+            amountField.addEventListener('keypress', (e)=>{
+                if(e.key === 'Enter'){
+                    e.preventDefault();
+                    const changedValue = e.target.textContent[0] === '₹' ? ((e.target.textContent).split('₹'))[1] : e.target.textContent;
+                    amountField.removeAttribute('contenteditable');
+                    const existingValue = expenseArrayHard[targetIndex];
+                    existingValue.splice(3,1, changedValue);
+                    expenseArrayHard.splice(targetIndex, 1, existingValue);
+                    updateLocalstorage(expenseArrayHard, 'expense')
+                }
+            })
+    }
+        else if(e.target.textContent === 'Edit description'){
+            const ul = e.target.parentElement;
+            const targetId = +(ul.id.split('-')[1]);
+            const descriptionField = (ul.parentElement).previousSibling.firstChild;
+            descriptionField.setAttribute('contenteditable', 'true');
+            const currentExpenseArray = convertObjtoArr(filterByCurrentMonthandYear(renderObject(expenseArrayHard)))
+            const currentMonthIndex = expenseArrayHard.length - currentExpenseArray.length
+            const targetIndex = currentMonthIndex + targetId
+            descriptionField.addEventListener('keypress', (e)=>{
+                if(e.key==='Enter'){
+                    e.preventDefault();
+                    const changedDesc = e.target.textContent;
+                    descriptionField.removeAttribute('contenteditable');
+                    const existingDesc = expenseArrayHard[targetIndex];
+                    existingDesc.splice(1,1,changedDesc);
+                    expenseArrayHard.splice(targetIndex, 1, existingDesc)
+                    updateLocalstorage(expenseArrayHard, 'expense')
+                }
+            })
+        }
+        else if(e.target.textContent === 'Delete'){
+            const ul = e.target.parentElement;
+            const targetId = +(ul.id.split('-')[1]);
+            const currentExpenseArray = convertObjtoArr(filterByCurrentMonthandYear(renderObject(expenseArrayHard)))
+            const currentMonthIndex = expenseArrayHard.length - currentExpenseArray.length
+            const targetIndex = currentMonthIndex + targetId;
+            expenseArrayHard.splice(targetIndex, 1)
+            updateLocalstorage(expenseArrayHard, 'expense')
+        }
+})
+})
+
 // Rendering appropriate cards from the stored expense array
 function renderCardAmounts(currentMonthExpenseArray){
         let totalAmount = 0;
@@ -160,6 +291,7 @@ function renderChart(chartArr) {
     if (myPieChart) {
         myPieChart.destroy(); // Destroy the previous chart instance
     }
+    chartText.innerHTML = '';
     var ctx = document.getElementById('myPieChart').getContext('2d');
     const labelsArray = chartArr.map(item => item[1]);
     const dataArray = chartArr.map(item => item[3]);
@@ -196,8 +328,8 @@ formModal.addEventListener('submit',(e)=>{
         addAmountChooseButton.classList.add('btn-outline-secondary')
         toPush.forEach(item=>{indExpenseArr.push(item.value);item.value=''})
         expenseArrayHard.push(indExpenseArr)
-        renderExpense(expenseArrayHard)  
-        updateLocalstorage(expenseArrayHard)
+        renderExpense(renderObject(expenseArrayHard))  
+        updateLocalstorage(expenseArrayHard, 'expense')
     } 
 })
 
@@ -289,8 +421,8 @@ fileInput.addEventListener('change',()=>{
                     inpValueArray.push(inpArray[i].value)
                 }
                 expenseArrayHard.push(inpValueArray);
-                renderExpense(expenseArrayHard)
-                updateLocalstorate(expenseArrayHard)
+                renderExpense(renderObject(expenseArrayHard))
+                updateLocalstorage(expenseArrayHard, 'expense')
 
             })
             const inpArray = [reason, amount, dateInp, submitButton]
@@ -332,9 +464,144 @@ fileInput.addEventListener('change',()=>{
     }
 })
 
-function updateLocalstorage(expenseArrayHard){
-    localStorage.setItem('expenseArray',JSON.stringify(expenseArrayHard))
+dueDropdown.addEventListener('click', (e)=>{
+    if(e.target.id === 'everyMonth'){
+        dueDropdown.classList.add('selected');
+    }
+})
+
+const dueObjArr = JSON.parse(localStorage.getItem('dueArray')) || [];
+const dueCardContainer = document.querySelector('#dueCardSubContainer')
+dueForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const fd = new FormData(dueForm);
+    const fObj = Object.fromEntries(fd);
+    dueObjArr.push(fObj);
+    dueForm.reset();
+    fObj['dateDifference'] = +findDaysDifference(fObj.dueDate);
+    !dueDropdown.classList.contains('selected') ? fObj['reminder'] = 'once' : (fObj['reminder'] = 'every_month', dueDropdown.classList.remove('selected'));
+    updateLocalstorage(dueObjArr, 'due');
+    // renderDueCards(dueObjArr)
+})
+function renderDueCards(dueObjArr){
+    dueCardContainer.innerHTML = '';
+    dueObjArr.forEach((obj, index)=>{
+        const dueCard = document.createElement('div');
+        dueCard.classList.add('col','col-5','v-stack','rounded-2','border','p-2','m-2');
+        dueCard.setAttribute('id', index)
+        const dueDetailsContainer = document.createElement('div');
+        dueDetailsContainer.classList.add('d-flex','flex-column', 'justify-content-center', 'align-items-center', 'pb-1');
+        dueCard.appendChild(dueDetailsContainer)
+        for(const key in obj){
+            const dueDetails = document.createElement('div')
+            if(key==='due' || key==='dueDate'){
+                if(key === 'dueDate'){
+                    dueDetails.style = 'color: #808080; font-size: 0.75rem;'
+                    const dateValidation = +obtainDateInfo(obj[key], 'day') < 10 ? `0${obtainDateInfo(obj[key], 'day')}` : obtainDateInfo(obj[key], 'day')
+                    dueDetails.textContent = `${dateValidation} ${getMonthName(obj[key])} ${obtainDateInfo(obj[key], 'year')}`
+                    dueDetailsContainer.appendChild(dueDetails)
+                }
+                else if(key==='due'){
+                    dueDetails.textContent = obj[key];
+                    dueDetailsContainer.appendChild(dueDetails)
+                }  
+            }
+            else if(key === 'dateDifference'){
+                const diffSpan = document.createElement('span');
+                diffSpan.textContent = ` (${obj[key] >= 0 ? `${Math.ceil(obj[key])} ${Math.ceil(obj[key]) > 1 ? 'days' : 'day'}` : `due past ${Math.floor(Math.abs(obj[key]))} ${Math.floor(Math.abs(obj[key])) > 1 ? 'days' : 'day'}`})`
+                dueDetailsContainer.lastChild.appendChild(diffSpan)
+                if(+obj[key] < 15 && +obj[key] > 5){
+                    dueCard.style.backgroundColor = '#FDFFAE'
+                }
+                else if(+obj[key] < 5 && +obj[key] > 0){
+                    dueCard.style.backgroundColor = '#FFD3B0'
+                }
+                else if(+obj[key] < 0){
+                    dueCard.style.backgroundColor = '#FF6969'
+                }
+            }
+            else if(key==='dueAmount'){
+                dueDetails.classList.add('text-center','display-5')
+                dueDetails.textContent = `₹${obj[key]}`;
+                dueCard.appendChild(dueDetails);
+                const dueDoneButton = document.createElement('button');
+                dueDoneButton.classList.add('col','col-6', 'my-1', 'text-success');
+                dueDoneButton.style = 'background-color: rgba(255, 255, 255, 0); border: none; outline: none'
+                const dueDeleteButton = document.createElement('button');
+                dueDeleteButton.classList.add('col', 'col-6', 'text-danger', 'my-1')
+                dueDeleteButton.style = 'background-color: rgba(255, 255, 255, 0); border: none; outline: none';
+                dueDeleteButton.innerHTML = '<span class="material-symbols-outlined align-middle">delete</span>'
+                dueDoneButton.innerHTML = '<span class="material-symbols-outlined align-middle">done</span>'
+                dueDoneButton.onclick = (e)=>{
+                    dueCard.removeChild(dueDeleteButton);
+                    dueCard.removeChild(dueDoneButton);
+                    dueCard.style.backgroundColor = '#C8E4B2';
+                    const dueComplete = document.createElement('button');
+                    dueComplete.style = 'background-color: rgba(255, 255, 255, 0); border: none; outline: none';
+                    dueComplete.classList.add('col-12');
+                    dueComplete.innerHTML = '<span class="material-symbols-outlined align-middle text-info">add</span>';
+                    dueCard.appendChild(dueComplete)
+                    dueComplete.onclick = (e)=>{
+                        const dueArr = [];
+                        for(let key in obj){
+                            dueArr.push(obj[key])
+                        }
+                        console.log(dueArr)
+                        dueArr.pop() && dueArr.pop() && dueArr.unshift('Expense');
+                        const updatedDueArr = dueArr
+                        updatedDueArr.push(...updatedDueArr.splice(2,1))
+                        expenseArrayHard.push(updatedDueArr);
+                        updateLocalstorage(expenseArrayHard,'expense');
+                        if(obj['reminder']==='every_month'){
+                            const dueNowDate = new Date()
+                            const updatedMonth = new Date(`${dueNowDate.getFullYear()}-${+dueNowDate.getMonth()+2}-${dueNowDate.getDate()}`)
+                            obj['dueDate'] = updatedMonth;
+                            obj['dateDifference'] = findDaysDifference(updatedMonth);
+                            dueObjArr.push(obj)
+                            removeCard(e);
+                            updateLocalstorage(dueObjArr, 'due');
+                            // renderDueCards(dueObjArr)
+                        }
+                        else removeCard(e) 
+                        // removeCard(e);//coditionally remove
+                    }
+                }
+                dueDeleteButton.onclick = (e)=>{removeCard(e)}
+                function removeCard(e){
+                    const parent = e.target.parentElement;
+                    const cardElement = parent.parentElement;
+                    dueObjArr.splice(cardElement.id, 1);
+                    updateLocalstorage(dueObjArr, 'due')
+                    // renderDueCards(dueObjArr)
+                }
+                dueCard.appendChild(dueDoneButton)
+                dueCard.appendChild(dueDeleteButton)
+            }
+        }
+        dueCardContainer.appendChild(dueCard)
+    }) 
 }
+renderDueCards(dueObjArr)
+
+function findDaysDifference(targetDate){
+    const today = new Date()
+    const target = new Date(targetDate)
+    const difference = (target-today) / ( 1000 * 60 * 60 * 24 )
+    return difference;
+}
+function updateLocalstorage(array, type){
+    switch(type){
+        case 'expense':
+            localStorage.setItem('expenseArray',JSON.stringify(array))
+            renderExpense(renderObject(array))
+            break;
+        case 'due': 
+            localStorage.setItem('dueArray', JSON.stringify(array));
+            renderDueCards(array);
+            break;
+    }
+      
+}   
 
 resetButtons.forEach(item=>{
     item.addEventListener('click',(e)=>{
