@@ -56,6 +56,11 @@ htmlDate.innerHTML = `Expense/Income history as of: ${today}`
 
 
 const expenseArrayHard = (JSON.parse(localStorage.getItem('expenseArray'))) || [] //ACTUAL EXPENSE/INCOME ARRAY TO BE RENDERED
+
+function sortedExpenseArray(expenseArrayHard){
+    return expenseArrayHard.sort((obj1, obj2)=>new Date(obj1[2]) - new Date(obj2[2]))
+}
+
 renderExpense(renderObject(expenseArrayHard)) //FUNCTION CALLED TO RENDER EXPENSE/INCOME DYNAMICALLY
 
 //FUNCTION TO CONSTRUCT AN OBJECT OUT OF THE STORED ARRAY
@@ -229,6 +234,7 @@ cardbody.forEach((item)=>{
                     existingValue.splice(3,1, changedValue);
                     expenseArrayHard.splice(targetIndex, 1, existingValue);
                     updateLocalstorage(expenseArrayHard, 'expense')
+                    // renderExpense(expenseArrayHard)
                 }
             })
     }
@@ -294,9 +300,19 @@ function renderCardAmounts(currentMonthExpenseArray){
     cardExpense.textContent =  `₹${totalExpense.toLocaleString('en-IN')}`
 }
 
+const legendToggleSwitch = document.getElementById('legendToggle');
+let legendtoggleStatus = false;
+legendToggleSwitch.addEventListener('click', ()=>{legendtoggleStatus=!legendtoggleStatus;console.log(legendtoggleStatus);updateChart()})
+function updateChart(){
+    if(myPieChart){
+        myPieChart.options.plugins.legend.display = legendtoggleStatus;
+        myPieChart.update();
+    }
+}
 // PIE CHART SECTION
 var myPieChart;
 function renderChart(chartArr) {
+    
     if (myPieChart) {
         myPieChart.destroy(); // CLEAR ANY PREVIOUS INSTANCES OF PIECHARTS ON THE CANVAS TO AVOID OVERALAPPING
     }
@@ -309,12 +325,23 @@ function renderChart(chartArr) {
         datasets: [{
             backgroundColor: ['#dc3545', '#0d6efd', '#ffc107', '#198754', '#6f42c1'],
             data: dataArray,
-            hoverOffset: 10
+            hoverOffset: 5
         }]
     };
     var config = {
         type: 'pie',
-        data: data      
+        data: data,
+        options: {
+            plugins: {
+                legend: {
+                    display:false,
+                    labels: {
+                        color: 'rgb(0, 0, 0)'
+                    }, 
+                    position: 'right'
+                }
+            }  
+        }    
     };
     myPieChart = new Chart(ctx, config); // CREATING NEW CHART INSTANCE BASED ON THE PREVIOUS VALUES AND CONFIGS
 }
@@ -426,7 +453,6 @@ fileInput.addEventListener('change',()=>{
             submitButton.addEventListener('click',(e)=>{
                 const inpValueArray = [];
                 e.preventDefault()
-                console.log('submitted')
                 inpValueArray.push(inputTypeSelect[inputTypeSelect.selectedIndex].value)
                 inpArray.splice(1,0,inpArray.splice(2,1)[0])
                 for(let i=0; i<inpArray.length - 1; i++){
@@ -461,7 +487,6 @@ fileInput.addEventListener('change',()=>{
                     let upd = '';
                     let updated = '';
                     count += 1;
-                    console.log(count)
                     count === 3? (upd = e.target.innerHTML.split('-'), updated = `${upd[2]}-${upd[1]}-${upd[0]}`, inpArray[2].value = updated) : inpArray[count-1].value = e.target.innerHTML
                     badgeDiv.removeChild(e.target)
                 })
@@ -557,7 +582,6 @@ function renderDueCards(dueObjArr){
                         for(let key in obj){
                             dueArr.push(obj[key])
                         }
-                        console.log(dueArr)
                         dueArr.pop() && dueArr.pop() && dueArr.unshift('Expense');
                         const updatedDueArr = dueArr
                         updatedDueArr.push(...updatedDueArr.splice(2,1))
@@ -603,11 +627,11 @@ function findDaysDifference(targetDate){
 function updateLocalstorage(array, type){
     switch(type){
         case 'expense':
-            localStorage.setItem('expenseArray',JSON.stringify(array))
+            localStorage.setItem('expenseArray',JSON.stringify(sortedExpenseArray(array)))
             renderExpense(renderObject(array))
             break;
         case 'due': 
-            localStorage.setItem('dueArray', JSON.stringify(array));
+            localStorage.setItem('dueArray', JSON.stringify(sortedExpenseArray(array)));
             renderDueCards(array);
             break;
     }
