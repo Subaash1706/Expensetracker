@@ -522,7 +522,7 @@ function renderDueCards(dueObjArr){
     dueCardContainer.innerHTML = '';
     dueObjArr.forEach((obj, index)=>{
         const dueCard = document.createElement('div');
-        dueCard.classList.add('col','col-10','col-md-5','col-lg-5','rounded-2','border','p-2','m-2', 'd-flex', 'flex-column', 'justify-content-between', 'align-items-center');
+        dueCard.classList.add('col','col-10','col-md-5','col-lg-5','v-stack','rounded-2','border','p-2','m-2');
         dueCard.setAttribute('id', index)
         const dueDetailsContainer = document.createElement('div');
         dueDetailsContainer.classList.add('d-flex','flex-column', 'justify-content-center', 'align-items-center', 'pb-1');
