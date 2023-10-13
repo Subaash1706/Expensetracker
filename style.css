@@ -167,3 +167,6 @@ body{
     overflow-y: auto;
     scrollbar-gutter: stable;
 }
+footer{
+    height: 25vh;
+}
