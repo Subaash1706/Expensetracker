@@ -28,6 +28,9 @@ const bgSuccessSubtle = 'bg-success-subtle'
 const darkSwitch = document.getElementById('switch')
 const dueForm = document.querySelector('#dueForm')
 const dueDropdown = document.querySelector('#dpdMenu')
+const groupButton = document.querySelector('#groupButton')
+const cardbody = document.querySelectorAll('#dashExpenseList');
+
 // darkSwitch.addEventListener('click', ()=>{
 //     if(darkSwitch.checked) body.setAttribute('data-theme','dark')
 //     else body.removeAttribute('data-theme')
@@ -149,56 +152,7 @@ function renderExpense(expenseArray){
     const currentMonthExpenseArray = convertObjtoArr(currentMonthExpenseArrayObj)
     if(currentMonthExpenseArrayObj.length > 0){
         expenseList.innerHTML = '';
-        // FOLLOWING ARE DYNAMIC RENDERING LOGIC FOR THE DASHBOARD HISTORY
-        currentMonthExpenseArrayObj.forEach((obj, index)=>{
-            const cardContainer = document.createElement('div');
-            cardContainer.classList.add('card','mb-2', 'mx-0','mx-md-2');
-            const cardBody = document.createElement('div');
-            cardBody.classList.add('card-body', 'd-flex', 'justify-content-between', 'align-items-center');
-            cardBody.setAttribute('id', 'dashCardBody')
-            const reasonAndDate = document.createElement('div');
-            reasonAndDate.classList.add('v-stack');
-            const reason = document.createElement('div');
-            reason.setAttribute('id', 'dashBoardReason');
-            reason.textContent = obj.reason;
-            reasonAndDate.appendChild(reason);
-            const date = document.createElement('div');
-            const objDate = obtainDateInfo(obj.date, 'day');
-            date.textContent = `${+objDate > 10 ? objDate : `0${objDate}`} ${getMonthName(obj.date)}`
-            date.setAttribute('id', 'dashBoardMonth');
-            reasonAndDate.appendChild(date);
-            cardBody.appendChild(reasonAndDate);
-            const amountContainer = document.createElement('div');
-            amountContainer.setAttribute('id', 'amountContainer')
-            const amount = document.createElement('div');
-            amount.classList.add( obj.type === 'Income' ? 'text-success' : 'text-danger', 'dashBoardAmount' ); // DYNAMIC FONT-COLOR BASED ON THE TYPE OF TRANSACTION MADE
-            amount.textContent = `₹${obj.amount}`;
-            amountContainer.appendChild(amount);
-            amountContainer.classList.add('d-flex', 'flex-row', 'justify-content-center', 'align-items-center')
-            const dotVertical = document.createElement('button')  // OPTIONS ICON ON EVERY ENTRY ON THE DASHBOARD ENTRIES TO EITHER EDIT AN ENTRY OR DELETE THEM ENTIRELY
-            dotVertical.classList.add('border-0','bg-light-subtle','position-absolute', 'end-0');
-            dotVertical.setAttribute('id', 'moreButton');
-            dotVertical.setAttribute('data-bs-toggle', 'dropdown');
-            dotVertical.setAttribute('data-bs-target', `#dashBoardDropdownmenu-${index}`)
-            dotVertical.innerHTML = `<span class="material-symbols-outlined align-middle">more_vert</span>`;
-            // EDIT/REMOVE LOGIC FOR INDIVIDUAL DASHBOARD ENTRIES
-            const dropDownMenu = document.createElement('ul')
-            dropDownMenu.classList.add('dropdown-menu','position-absolute','top-0');
-            dropDownMenu.setAttribute('id', `dashBoardDropdownMenu-${index}`)
-            const dropDownItemKeys = ['Edit description', 'Edit amount', 'Delete'];
-            for(let i =0; i< dropDownItemKeys.length; i++){
-                const dropDownItem = document.createElement('li');
-                dropDownItem.classList.add('dropdown-item');
-                dropDownItem.textContent = dropDownItemKeys[i];
-                dropDownItem.setAttribute('id', 'dashBoardDropdownItem');
-                dropDownMenu.appendChild(dropDownItem)
-            }
-            amountContainer.appendChild(dotVertical);
-            amountContainer.appendChild(dropDownMenu);
-            cardBody.appendChild(amountContainer);
-            cardContainer.appendChild(cardBody);
-            expenseList.appendChild(cardContainer);
-        })
+        !groupButton.classList.contains('active') ? (renderHistoryCard(currentMonthExpenseArrayObj, true), renderChart(currentMonthExpenseArray),console.log('chart')) : groupItems(currentMonthExpenseArrayObj);
     }
     else{
         expenseList.innerHTML =  '';
@@ -206,12 +160,134 @@ function renderExpense(expenseArray){
         noItems.innerHTML = 'No Expense/Income record for the current month';
         expenseList.appendChild(noItems)
     }
-    renderChart(currentMonthExpenseArray)
+    // renderChart(currentMonthExpenseArray)
     renderCardAmounts(currentMonthExpenseArray)
 }
+function renderHistoryCard(currentMonthExpenseArrayObj, status){
+    const elements = [];
+    // FOLLOWING ARE DYNAMIC RENDERING LOGIC FOR THE DASHBOARD TXN HISTORY
+    currentMonthExpenseArrayObj.forEach((obj, index)=>{
+        const cardContainer = document.createElement('div');
+        cardContainer.classList.add('card','mb-2', 'mx-0','mx-md-2');
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body', 'd-flex', 'justify-content-between', 'align-items-center');
+        cardBody.setAttribute('id', 'dashCardBody')
+        const reasonAndDate = document.createElement('div');
+        reasonAndDate.classList.add('v-stack');
+        const reason = document.createElement('div');
+        reason.setAttribute('id', 'dashBoardReason');
+        reason.textContent = obj.reason;
+        reasonAndDate.appendChild(reason);
+        const date = document.createElement('div');
+        const objDate = obtainDateInfo(obj.date, 'day');
+        date.textContent = `${+objDate > 10 ? objDate : `0${objDate}`} ${getMonthName(obj.date)}`
+        date.setAttribute('id', 'dashBoardMonth');
+        reasonAndDate.appendChild(date);
+        cardBody.appendChild(reasonAndDate);
+        const amountContainer = document.createElement('div');
+        amountContainer.setAttribute('id', 'amountContainer')
+        const amount = document.createElement('div');
+        amount.classList.add( obj.type === 'Income' ? 'text-success' : 'text-danger', 'dashBoardAmount' ); // DYNAMIC FONT-COLOR BASED ON THE TYPE OF TRANSACTION MADE
+        amount.textContent = `₹${obj.amount}`;
+        amountContainer.appendChild(amount);
+        amountContainer.classList.add('d-flex', 'flex-row', 'justify-content-center', 'align-items-center')
+        const dotVertical = document.createElement('button')  // OPTIONS ICON ON EVERY ENTRY ON THE DASHBOARD ENTRIES TO EITHER EDIT AN ENTRY OR DELETE THEM ENTIRELY
+        dotVertical.classList.add('border-0','bg-light-subtle','position-absolute', 'end-0');
+        dotVertical.setAttribute('id', 'moreButton');
+        dotVertical.setAttribute('data-bs-toggle', 'dropdown');
+        dotVertical.setAttribute('data-bs-target', `#dashBoardDropdownmenu-${index}`)
+        dotVertical.innerHTML = `<span class="material-symbols-outlined align-middle">more_vert</span>`;
+        // EDIT/REMOVE LOGIC FOR INDIVIDUAL DASHBOARD ENTRIES
+        const dropDownMenu = document.createElement('ul')
+        dropDownMenu.classList.add('dropdown-menu','position-absolute','top-0');
+        dropDownMenu.setAttribute('id', `dashBoardDropdownMenu-${index}`)
+        const dropDownItemKeys = ['Edit description', 'Edit amount', 'Delete'];
+        for(let i =0; i< dropDownItemKeys.length; i++){
+            const dropDownItem = document.createElement('li');
+            dropDownItem.classList.add('dropdown-item');
+            dropDownItem.textContent = dropDownItemKeys[i];
+            dropDownItem.setAttribute('id', 'dashBoardDropdownItem');
+            dropDownMenu.appendChild(dropDownItem)
+        }
+        amountContainer.appendChild(dotVertical);
+        amountContainer.appendChild(dropDownMenu);
+        cardBody.appendChild(amountContainer);
+        cardContainer.appendChild(cardBody);
+        expenseList.appendChild(cardContainer);
+        elements.push(cardContainer)
+    })
+    return !status ? elements : null;
+}
 
+const groupedArray = [];
+groupButton.addEventListener('click', ()=>{renderExpense(renderObject(expenseArrayHard))})
+function groupItems(currentMonthExpenseArrayObj){
+    const commonElement = {};
+    const uniqueArray = [];
+    const nonUniqueArray = [];
+    currentMonthExpenseArrayObj.forEach(item=>{
+        if(commonElement[item.reason]){
+            commonElement[item.reason] += 1
+
+        }
+        else {
+            commonElement[item.reason] = 1
+        }
+    })
+    
+    for(const reason in commonElement){
+        if(+commonElement[reason] === +1){
+            const unique = currentMonthExpenseArrayObj.filter((ele)=>{return reason === ele.reason})
+            uniqueArray.push(...unique);
+        }
+        else{
+            const nonUnique = currentMonthExpenseArrayObj.filter((obj)=>{return reason === obj.reason})
+            nonUniqueArray.push(...nonUnique);
+            // groupedArray.push(nonUniqueArray)
+            // console.log(nonUniqueArray)
+            const particularElement = currentMonthExpenseArrayObj.filter(ele=>{return reason === ele.reason})
+            const totalAmountForParticularElement = particularElement.reduce((acc, value)=>{return acc+ +value.amount}, 0)
+            //grouped accordion
+            const accordion = document.createElement('div');
+            accordion.classList.add('accordion', 'mb-2', 'mx-2');
+            const accItem = document.createElement('div');
+            accItem.classList.add('accordion-item', 'py-2');
+            const accHead = document.createElement('div');
+            accHead.classList.add('accordion-header');
+            const accButton = document.createElement('button');
+            accButton.classList.add('accordion-button', 'bg-white', 'border', 'border-0');
+            accButton.setAttribute('id', 'dashBoardReason')
+            accButton.setAttribute('data-bs-target', `#groupAccordion${reason}`);
+            accButton.setAttribute('data-bs-toggle', 'collapse');
+            accButton.innerHTML = reason;
+            const priceSpan = document.createElement('span');
+            priceSpan.classList.add(particularElement[0].type === 'Expense' ? 'text-danger' : 'text-success', 'ms-3', 'dashBoardGroupAmount');
+            priceSpan.innerHTML = `₹${totalAmountForParticularElement}`;
+            accButton.appendChild(priceSpan)
+            accHead.appendChild(accButton);
+            accItem.appendChild(accHead)
+            const accColl = document.createElement('div');
+            accColl.classList.add('accordion-collapse', 'collapse');
+            accColl.setAttribute('id', `groupAccordion${reason}`);
+            const accBody = document.createElement('div');
+            accBody.classList.add('accordion-body');
+            accBody.setAttribute('id', reason);
+            accColl.appendChild(accBody);
+            accItem.appendChild(accColl);
+            accordion.appendChild(accItem);
+            expenseList.appendChild(accordion);
+            const cards = renderHistoryCard(particularElement, false);
+            // console.log(cards)
+            cards.forEach(item=>accBody.appendChild(item))
+        }
+    }
+    // console.log(uniqueArray)
+    // groupedArray.push(convertObjtoArr(uniqueArray))
+    // groupedArray.push(convertObjtoArr(uniqueArray))
+    uniqueArray.length > 0 ? renderHistoryCard(uniqueArray, false) : null;
+}
+console.log(groupedArray)
 // SELECTS EVERY INDIVIDUAL ENTRY FROM THE OVERALL EXPENSE/INCOME ENTRY DISPLAYED ON DASHBOARD
-const cardbody = document.querySelectorAll('#dashExpenseList');
 cardbody.forEach((item)=>{
     // ADDING A CLICK EVENT TO EVERY ENTRY, SO AS TO IDENTIFY WHICH OPTION IN THE OPTIONS(EDIT OR DELETE) IS BEING SELECTED
     item.addEventListener('click', (e)=>{
@@ -221,6 +297,7 @@ cardbody.forEach((item)=>{
             const targetId = +(ul.id.split('-')[1]);
             const amountField = (ul.parentElement).firstChild;
             amountField.setAttribute('contenteditable', 'true');
+            amountField.classList.add('bg-info-subtle')
             const currentExpenseArray = convertObjtoArr(filterByCurrentMonthandYear(renderObject(expenseArrayHard)))
             const currentMonthIndex = expenseArrayHard.length - currentExpenseArray.length
             const targetIndex = currentMonthIndex + targetId
@@ -230,6 +307,7 @@ cardbody.forEach((item)=>{
                     e.preventDefault();
                     const changedValue = e.target.textContent[0] === '₹' ? ((e.target.textContent).split('₹'))[1] : e.target.textContent;
                     amountField.removeAttribute('contenteditable');
+                    amountField.classList.remove('bg-info-subtle')
                     const existingValue = expenseArrayHard[targetIndex];
                     existingValue.splice(3,1, changedValue);
                     expenseArrayHard.splice(targetIndex, 1, existingValue);
@@ -243,6 +321,7 @@ cardbody.forEach((item)=>{
             const targetId = +(ul.id.split('-')[1]);
             const descriptionField = (ul.parentElement).previousSibling.firstChild;
             descriptionField.setAttribute('contenteditable', 'true');
+            descriptionField.classList.add('bg-info-subtle')
             const currentExpenseArray = convertObjtoArr(filterByCurrentMonthandYear(renderObject(expenseArrayHard)))
             const currentMonthIndex = expenseArrayHard.length - currentExpenseArray.length
             const targetIndex = currentMonthIndex + targetId
@@ -251,6 +330,7 @@ cardbody.forEach((item)=>{
                     e.preventDefault();
                     const changedDesc = e.target.textContent;
                     descriptionField.removeAttribute('contenteditable');
+                    descriptionField.classList.add('bg-info-subtle')
                     const existingDesc = expenseArrayHard[targetIndex];
                     existingDesc.splice(1,1,changedDesc);
                     expenseArrayHard.splice(targetIndex, 1, existingDesc)

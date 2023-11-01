@@ -17,6 +17,7 @@ body{
     overflow-x: hidden;
     background-color: var(--BACKGROUND-COLOR)!important;
     color: var(--TEXT-COLOR);
+    scrollbar-gutter: stable;
 }
 #myPieChart{
     border: var(--BACKGROUND-COLOR)
@@ -62,7 +63,11 @@ body{
   #accordion .nav-link.text-black:last-child {
     font-size: 16px;
   }
-  
+.accordion:focus, .accordion-item:focus, .accordion-button:focus{
+    outline: none!important;
+    border: none!important;
+    box-shadow: none!important;
+}
 .activeArrow{
     transform: rotateZ(180deg);
 }
@@ -152,6 +157,10 @@ body{
     font-weight: 200;
     padding-right: 1rem;
 
+}
+.dashBoardGroupAmount{
+    font-size: 1.85rem;
+    font-weight: 325;
 }
 #moreButton{
     background-color: var(--BACKGROUND-COLOR)!important;
