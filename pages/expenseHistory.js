@@ -68,7 +68,8 @@ function renderYearCards(recordYearsArray){
         cardBody.appendChild(cardBackDrop)
         cardContainer.appendChild(cardBody)
         monthContainer.appendChild(cardContainer);
-        cardContainer.style.backgroundImage = `url(../images/vectors/bg-${Math.floor(Math.random() * 6)}.jpg)`
+        cardContainer.style.backgroundImage = `url(../images/vectors/bg-${Math.floor(Math.random() * 6)}.jpg)`;
+body.appendChild(cardContainer)
     })    
     }
     else{
