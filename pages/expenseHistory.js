@@ -4,7 +4,7 @@ const body = document.querySelector('body');
 const lsObjArray = [];
 const recordYears = new Set(); // DECLARED A SET TO FILTER OUT THE UNIQUE VALUES OF YEARS PRESENT IN THE STORED ENTRY
 const paraTag = document.createElement('div');
-paraTag.innerHTML = 'Add some data to view yearwise Expense/Income history'
+paraTag.innerHTML = 'Add some data to view yearwise Expense/Income history, dat unavailable'
 function fetchLocalStorageData(){ // FETCHES LS DATA AS USUAL
     try{
         const lsArray = localStorage.getItem('expenseArray')
