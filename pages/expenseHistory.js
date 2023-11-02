@@ -33,10 +33,6 @@ function fetchLocalStorageData(){ // FETCHES LS DATA AS USUAL
     catch(err){
         const errMsg = err;
         body.appendChild(paraTag)
-const h1=document.createElement('h1')
-h1.innerHTML = errMsg
-body.appendChild(h1)
-        console.log(errMsg)
     }
 }
 fetchLocalStorageData()
