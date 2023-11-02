@@ -152,7 +152,7 @@ function renderExpense(expenseArray){
     const currentMonthExpenseArray = convertObjtoArr(currentMonthExpenseArrayObj)
     if(currentMonthExpenseArrayObj.length > 0){
         expenseList.innerHTML = '';
-        !groupButton.classList.contains('active') ? (renderHistoryCard(currentMonthExpenseArrayObj, true), renderChart(currentMonthExpenseArray),console.log('chart')) : groupItems(currentMonthExpenseArrayObj);
+        !groupButton.classList.contains('active') ? (renderHistoryCard(currentMonthExpenseArrayObj, true), renderChart(currentMonthExpenseArray)) : groupItems(currentMonthExpenseArrayObj);
     }
     else{
         expenseList.innerHTML =  '';
@@ -219,16 +219,17 @@ function renderHistoryCard(currentMonthExpenseArrayObj, status){
     return !status ? elements : null;
 }
 
-const groupedArray = [];
+//LOGIC TO GROUP EXPENSE/INCOME AND THEREBY TO RENDER AN APPROPRIATE CHART
 groupButton.addEventListener('click', ()=>{renderExpense(renderObject(expenseArrayHard))})
 function groupItems(currentMonthExpenseArrayObj){
+    const groupedArray = [];
     const commonElement = {};
     const uniqueArray = [];
     const nonUniqueArray = [];
+    const dummyNonUniqueArray = [];
     currentMonthExpenseArrayObj.forEach(item=>{
         if(commonElement[item.reason]){
             commonElement[item.reason] += 1
-
         }
         else {
             commonElement[item.reason] = 1
@@ -241,15 +242,18 @@ function groupItems(currentMonthExpenseArrayObj){
             uniqueArray.push(...unique);
         }
         else{
+            const dummyNonUniqueObj = {};
             const nonUnique = currentMonthExpenseArrayObj.filter((obj)=>{return reason === obj.reason})
             nonUniqueArray.push(...nonUnique);
-            // groupedArray.push(nonUniqueArray)
-            // console.log(nonUniqueArray)
+            dummyNonUniqueObj['type'] = 'Expense';
+            dummyNonUniqueObj['reason'] = reason;
+            dummyNonUniqueObj['date'] = '01/01/01';
             const particularElement = currentMonthExpenseArrayObj.filter(ele=>{return reason === ele.reason})
             const totalAmountForParticularElement = particularElement.reduce((acc, value)=>{return acc+ +value.amount}, 0)
+            dummyNonUniqueObj['amount'] = totalAmountForParticularElement;
             //grouped accordion
             const accordion = document.createElement('div');
-            accordion.classList.add('accordion', 'mb-2', 'mx-2');
+            accordion.classList.add('accordion', 'mb-2', 'mx-sm-2');
             const accItem = document.createElement('div');
             accItem.classList.add('accordion-item', 'py-2');
             const accHead = document.createElement('div');
@@ -277,16 +281,15 @@ function groupItems(currentMonthExpenseArrayObj){
             accordion.appendChild(accItem);
             expenseList.appendChild(accordion);
             const cards = renderHistoryCard(particularElement, false);
-            // console.log(cards)
             cards.forEach(item=>accBody.appendChild(item))
+            dummyNonUniqueArray.push(dummyNonUniqueObj)
         }
     }
-    // console.log(uniqueArray)
-    // groupedArray.push(convertObjtoArr(uniqueArray))
-    // groupedArray.push(convertObjtoArr(uniqueArray))
+    groupedArray.push(...convertObjtoArr(dummyNonUniqueArray))
+    groupedArray.push(...convertObjtoArr(uniqueArray))
+    renderChart(groupedArray);
     uniqueArray.length > 0 ? renderHistoryCard(uniqueArray, false) : null;
 }
-console.log(groupedArray)
 // SELECTS EVERY INDIVIDUAL ENTRY FROM THE OVERALL EXPENSE/INCOME ENTRY DISPLAYED ON DASHBOARD
 cardbody.forEach((item)=>{
     // ADDING A CLICK EVENT TO EVERY ENTRY, SO AS TO IDENTIFY WHICH OPTION IN THE OPTIONS(EDIT OR DELETE) IS BEING SELECTED
@@ -356,6 +359,7 @@ function renderCardAmounts(currentMonthExpenseArray){
         let totalAmount = 0;
         let totalExpense = 0;
         let totalIncome = 0;
+        let totalExpensePercentage = 0;
     if(currentMonthExpenseArray.length > 0){ 
         currentMonthExpenseArray.forEach(item=>{
             totalIncome += item[0]==='Income' ? Number(item[3]) : 0;
@@ -363,6 +367,7 @@ function renderCardAmounts(currentMonthExpenseArray){
         })
     } 
     totalAmount = totalIncome - totalExpense;
+    totalExpensePercentage = (100-(((totalAmount) / (totalIncome))*100)).toFixed(2)
     validateCardTotalAmount(totalAmount, cardTotalAmount);
     function validateCardTotalAmount(totalAmount, cardTotalAmount){
         const cardParent = cardTotalAmount.parentElement;
@@ -377,7 +382,7 @@ function renderCardAmounts(currentMonthExpenseArray){
         )
     }
     cardIncome.textContent =  `₹${totalIncome.toLocaleString('en-IN')}`
-    cardExpense.textContent =  `₹${totalExpense.toLocaleString('en-IN')}`
+    cardExpense.innerHTML =  `₹${totalExpense.toLocaleString('en-IN')} <span class='text-muted percentage'>(${totalExpensePercentage}% of total)</span>`
 }
 
 const legendToggleSwitch = document.getElementById('legendToggle');

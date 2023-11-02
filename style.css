@@ -176,6 +176,9 @@ body{
     overflow-y: auto;
     scrollbar-gutter: stable;
 }
+.percentage{
+    font-size: 1.25rem;
+}
 footer{
     height: 25vh;
 }
