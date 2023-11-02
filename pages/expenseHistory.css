@@ -35,7 +35,6 @@
 }
 #monthAccordion .card:hover{
     transform: scale(1.05);
-    font-weight: 500;
     /* box-shadow: 2px 5px 8px black; */
 }
 #monthAccordion .card:active{
