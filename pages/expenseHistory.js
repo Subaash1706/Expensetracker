@@ -4,7 +4,7 @@ const body = document.querySelector('body');
 const lsObjArray = [];
 const recordYears = new Set(); // DECLARED A SET TO FILTER OUT THE UNIQUE VALUES OF YEARS PRESENT IN THE STORED ENTRY
 const paraTag = document.createElement('div');
-paraTag.innerHTML = 'Add some data to view yearwise Expense/Income history'
+paraTag.innerHTML = 'Add some data to view yearwise Expense/Income history, dat unavailable'
 function fetchLocalStorageData(){ // FETCHES LS DATA AS USUAL
     try{
         const lsArray = localStorage.getItem('expenseArray')
@@ -33,6 +33,9 @@ function fetchLocalStorageData(){ // FETCHES LS DATA AS USUAL
     catch(err){
         const errMsg = err;
         body.appendChild(paraTag)
+const h1=document.createElement('h1')
+h1.innerHTML = errMsg
+body.appendChild(h1)
         console.log(errMsg)
     }
 }
@@ -68,7 +71,8 @@ function renderYearCards(recordYearsArray){
         cardBody.appendChild(cardBackDrop)
         cardContainer.appendChild(cardBody)
         monthContainer.appendChild(cardContainer);
-        cardContainer.style.backgroundImage = `url(../images/vectors/bg-${Math.floor(Math.random() * 6)}.jpg)`
+        cardContainer.style.backgroundImage = `url(../images/vectors/bg-${Math.floor(Math.random() * 6)}.jpg)`;
+body.appendChild(cardContainer)
     })    
     }
     else{
