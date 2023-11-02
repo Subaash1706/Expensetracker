@@ -382,7 +382,7 @@ function renderCardAmounts(currentMonthExpenseArray){
         )
     }
     cardIncome.textContent =  `₹${totalIncome.toLocaleString('en-IN')}`
-    cardExpense.innerHTML =  `₹${totalExpense.toLocaleString('en-IN')} <span class='text-muted percentage'>(${totalExpensePercentage}% of total)</span>`
+    cardExpense.innerHTML =  `₹${totalExpense.toLocaleString('en-IN')} <span class='text-muted percentage'>(${totalExpensePercentage !== 'Infinity' && totalExpensePercentage !== 'NaN' ? totalExpensePercentage : 0}% of total)</span>`
 }
 
 const legendToggleSwitch = document.getElementById('legendToggle');
