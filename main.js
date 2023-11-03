@@ -316,6 +316,7 @@ cardbody.forEach((item)=>{
                     expenseArrayHard.splice(targetIndex, 1, existingValue);
                     updateLocalstorage(expenseArrayHard, 'expense')
                     // renderExpense(expenseArrayHard)
+                    createAlertContainer('success', 'Amount updated', 'material-symbols-outlined');
                 }
             })
     }
@@ -338,6 +339,7 @@ cardbody.forEach((item)=>{
                     existingDesc.splice(1,1,changedDesc);
                     expenseArrayHard.splice(targetIndex, 1, existingDesc)
                     updateLocalstorage(expenseArrayHard, 'expense')
+                    createAlertContainer('success', 'Description updated', 'material-symbols-outlined');
                 }
             })
         }
@@ -350,6 +352,8 @@ cardbody.forEach((item)=>{
             const targetIndex = currentMonthIndex + targetId;
             expenseArrayHard.splice(targetIndex, 1)
             updateLocalstorage(expenseArrayHard, 'expense')
+            createAlertContainer('danger', 'Data deleted successfully', 'material-symbols-outlined');
+
         }
 })
 })
@@ -451,11 +455,22 @@ formModal.addEventListener('submit',(e)=>{
         addAmountChooseButton.classList.add('btn-outline-secondary')
         toPush.forEach(item=>{indExpenseArr.push(item.value);item.value=''})
         expenseArrayHard.push(indExpenseArr)
+        createAlertContainer('success', 'Data added successfully', 'material-symbols-outlined');
         // ONCE THE FORM DATA HAS BEEN COLLECTED, THE DATA IS THEN USED TO UPDATE THE LOCALSTORAGE AND THEN IS USED TO RE-RENDER CONTENTS ON THE DASHBOARD
         renderExpense(renderObject(expenseArrayHard))  
         updateLocalstorage(expenseArrayHard, 'expense')
     } 
 })
+
+function createAlertContainer(nature, message, icon){
+    const alertContainer = document.createElement('div');
+    alertContainer.classList.add('alert', `alert-${nature}`, 'position-fixed', 'top-0', 'start-50', 'z-3', 'shadow', 'alertContainer');
+    const symbol = `<span class="${icon} align-middle pe-2">check_circle</span>${message}`;
+    alertContainer.innerHTML = symbol;
+    body.appendChild(alertContainer)
+    setTimeout(()=>body.removeChild(alertContainer), 2500)
+    // return alertContainer;
+}
 
 // SIMILAR TO A FORM, BUT COLLECTS EXPENSE/INCOME DATA THROUGH THE IMAGES UPLOADED BY THE USER. IMAGES MAY BE BILLS OF VARIOUS KINDS. THIS IS AN EXPERIMENTAL FEATURE AND WON'T WORK PROPERLY AND IS HIGHLY DEPENDANT ON THE TESSERACTjS LIBRARY.
 const fileInput = document.querySelector('#fileUpload')

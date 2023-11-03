@@ -41,8 +41,8 @@ body{
 }
 
 :is(#offcanvas,#offcanvas .nav-item,#offcanvas .nav-link,.accordion-button,.accordion-body,.accordion-collapse,#offcanvas div){
-    background-color: var(--BACKGROUND-COLOR)!important;
-    color: var(--TEXT-COLOR)!important;
+    /* background-color: var(--BACKGROUND-COLOR)!important;
+    color: var(--TEXT-COLOR)!important; */
     transition: all 0.5s;
 }
 #offcanvas{
@@ -178,6 +178,25 @@ body{
 }
 .percentage{
     font-size: 1.25rem;
+}
+.alertContainer{
+    /* opacity: 0.55; */
+    backdrop-filter: 5px;
+    /* top: 5vh!important; */
+    translate: -50% 0%;
+    z-index: 1050!important;
+    animation: fade 2500ms ease-in-out;
+}
+@keyframes fade {
+    0%{
+        opacity: 0;
+    }
+    25%, 50%, 75%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
 }
 footer{
     height: 25vh;
