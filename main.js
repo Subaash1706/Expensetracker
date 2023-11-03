@@ -316,7 +316,7 @@ cardbody.forEach((item)=>{
                     expenseArrayHard.splice(targetIndex, 1, existingValue);
                     updateLocalstorage(expenseArrayHard, 'expense')
                     // renderExpense(expenseArrayHard)
-                    createAlertContainer('success', 'Amount updated', 'material-symbols-outlined');
+                    createAlertContainer('success', 'Amount updated', 'check_circle');
                 }
             })
     }
@@ -339,7 +339,7 @@ cardbody.forEach((item)=>{
                     existingDesc.splice(1,1,changedDesc);
                     expenseArrayHard.splice(targetIndex, 1, existingDesc)
                     updateLocalstorage(expenseArrayHard, 'expense')
-                    createAlertContainer('success', 'Description updated', 'material-symbols-outlined');
+                    createAlertContainer('success', 'Description updated', 'check_circle');
                 }
             })
         }
@@ -352,7 +352,7 @@ cardbody.forEach((item)=>{
             const targetIndex = currentMonthIndex + targetId;
             expenseArrayHard.splice(targetIndex, 1)
             updateLocalstorage(expenseArrayHard, 'expense')
-            createAlertContainer('danger', 'Data deleted successfully', 'material-symbols-outlined');
+            createAlertContainer('danger', 'Data deleted successfully', 'check_circle');
 
         }
 })
@@ -441,6 +441,7 @@ formModal.addEventListener('submit',(e)=>{
     if(!formModal.checkValidity() && !addAmountInput.classList.contains(bgDangerSubtle,bgSuccessSubtle)){
         e.preventDefault()
         formModal.classList.add('was-validated')
+        createAlertContainer('danger', 'Fill all the fields', 'dangerous')
     }
     else{
         formModal.classList.remove('was-validated')
@@ -455,7 +456,7 @@ formModal.addEventListener('submit',(e)=>{
         addAmountChooseButton.classList.add('btn-outline-secondary')
         toPush.forEach(item=>{indExpenseArr.push(item.value);item.value=''})
         expenseArrayHard.push(indExpenseArr)
-        createAlertContainer('success', 'Data added successfully', 'material-symbols-outlined');
+        createAlertContainer('success', 'Data added successfully', 'check_circle');
         // ONCE THE FORM DATA HAS BEEN COLLECTED, THE DATA IS THEN USED TO UPDATE THE LOCALSTORAGE AND THEN IS USED TO RE-RENDER CONTENTS ON THE DASHBOARD
         renderExpense(renderObject(expenseArrayHard))  
         updateLocalstorage(expenseArrayHard, 'expense')
@@ -465,7 +466,7 @@ formModal.addEventListener('submit',(e)=>{
 function createAlertContainer(nature, message, icon){
     const alertContainer = document.createElement('div');
     alertContainer.classList.add('alert', `alert-${nature}`, 'position-fixed', 'top-0', 'start-50', 'z-3', 'shadow', 'alertContainer');
-    const symbol = `<span class="${icon} align-middle pe-2">check_circle</span>${message}`;
+    const symbol = `<span class="material-symbols-outlined align-middle pe-2">${icon}</span>${message}`;
     alertContainer.innerHTML = symbol;
     body.appendChild(alertContainer)
     setTimeout(()=>body.removeChild(alertContainer), 2500)
@@ -615,6 +616,7 @@ dueForm.addEventListener('submit', (e)=>{
     fObj['dateDifference'] = +findDaysDifference(fObj.dueDate);
     !dueDropdown.classList.contains('selected') ? fObj['reminder'] = 'once' : (fObj['reminder'] = 'every_month', dueDropdown.classList.remove('selected'));
     updateLocalstorage(dueObjArr, 'due');
+    createAlertContainer('success', 'Due added', 'check_circle')
 })
 
 // FROM THE DUESARRAY, CARDS ARE BEING RENDERED
