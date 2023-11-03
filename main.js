@@ -465,7 +465,7 @@ formModal.addEventListener('submit',(e)=>{
 
 function createAlertContainer(nature, message, icon){
     const alertContainer = document.createElement('div');
-    alertContainer.classList.add('alert', `alert-${nature}`, 'position-fixed', 'top-0', 'start-50', 'z-3', 'shadow', 'alertContainer');
+    alertContainer.classList.add('alert', `alert-${nature}`, 'col', 'col-md-4', 'col-12', 'mx-auto', 'position-fixed', 'top-0', 'start-50', 'z-3', 'shadow', 'alertContainer');
     const symbol = `<span class="material-symbols-outlined align-middle pe-2">${icon}</span>${message}`;
     alertContainer.innerHTML = symbol;
     body.appendChild(alertContainer)
