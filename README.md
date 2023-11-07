@@ -1,6 +1,6 @@
 <div align='center'>
   <h1>Expense/Income tracker</h1>
-  <a href='https://github.com/Subaash1706/Expensetracker'>View Demo</a>
+  <a href='https://subaash1706.github.io/Expensetracker/'>View Demo</a>
   |
   <a href='https://github.com/Subaash1706/Expensetracker/issues'>Report Bug</a>
   |
@@ -16,7 +16,7 @@
   <p>A Responsive Expense/Income tracker to help users keep track of their transactions.</p>
 </div>
 <hr>
-<a href='https://github.com/Subaash1706/Expensetracker'><img src='./images/Tweelet.png' alt='Site screenshot'/></a>
+<a href='https://subaash1706.github.io/Expensetracker/'><img src='./images/Tweelet.png' alt='Site screenshot'/></a>
 
  ## Table of contents
  - [Key features](/#key-features)
