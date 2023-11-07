@@ -198,6 +198,31 @@ body{
         opacity: 0;
     }
 }
-footer{
+/* footer{
     height: 25vh;
+} */
+.contact a, .contact img{
+    position: relative;
+    z-index: 33;
+    transition: all 500ms;
+}
+.contact a::after{
+    content: '';
+    position: absolute;
+    background-color: white;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    translate: 50% 30%;
+    z-index: 0;
+}
+.contact img:hover{
+    scale: 1.1;
+}
+.blockquoteDiv{
+    display: inline-block;
+    position: relative;
+    font-size: 1.5rem;
+    opacity: 0.5;
 }
