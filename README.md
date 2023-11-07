@@ -68,4 +68,4 @@
 Feel free to contact me incase of bugs, issues or queries.
 
 ## Note
-No need to setup a server as for now.  But backend processes are still undergoing and I hope that the data could be stored in the database soon.
+I don't need to set up a server right now, but backend processes are still in progress, and I hope to have the data stored in the database soon.
