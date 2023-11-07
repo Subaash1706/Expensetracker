@@ -21,7 +21,7 @@
  ## Table of contents
  - [Key features](/#key-features)
  - [Built with](#built-with)
- - [Installation](#installatioin)
+ - [Installation](#installation)
  - [Author](#author)
 
  ## Key features
@@ -44,10 +44,12 @@
   - ChartJs
 
 ## Installation
-- Clone this repo
+
+- Fork this repo
+- Clone the repo from your repositories
   
   ```sh
-  git clone
+  git clone <forked-repo-link>
   ```
   
 - Open with your editor
