@@ -12,6 +12,7 @@ const addAmountButton = document.querySelector('#addAmountButton');
 const addAmountDate = document.querySelector('#addAmountDate');
 const addAmountSource = document.querySelector('#addAmountSource');
 const addAmountChooseButton = document.querySelector('#chooseCategoryButton')
+const addAmountChooseLiParent = document.querySelector('#chooseCategoryParent')
 const addAmountChooseLi = document.querySelectorAll('#chooseCategory');
 const addAmountCloseButton = document.querySelector('#addAmountCloseButton');
 const cardTotalAmount = document.querySelector('#cardTotalAmount');
@@ -36,7 +37,9 @@ const cardbody = document.querySelectorAll('#dashExpenseList');
 //     else body.removeAttribute('data-theme')
 // })
 
-
+addAmountChooseButton.addEventListener('click', ()=>{
+    addAmountChooseLi.forEach(item=>item.classList.remove('chosen'))
+})
 addAmountChooseLi.forEach(item=>{
     item.addEventListener('click',(e)=>{
         addAmountInput.classList.remove(bgDangerSubtle, bgSuccessSubtle)
@@ -180,7 +183,7 @@ function renderHistoryCard(currentMonthExpenseArrayObj, status){
         reasonAndDate.appendChild(reason);
         const date = document.createElement('div');
         const objDate = obtainDateInfo(obj.date, 'day');
-        date.textContent = `${+objDate > 10 ? objDate : `0${objDate}`} ${getMonthName(obj.date)}`
+        date.textContent = `${+objDate >= 10 ? objDate : `0${objDate}`} ${getMonthName(obj.date)}`
         date.setAttribute('id', 'dashBoardMonth');
         reasonAndDate.appendChild(date);
         cardBody.appendChild(reasonAndDate);
@@ -455,9 +458,10 @@ formModal.addEventListener('submit',(e)=>{
         addAmountChooseButton.classList.remove(btnDanger, btnSuccess)
         addAmountChooseButton.classList.add('btn-outline-secondary')
         toPush.forEach(item=>{indExpenseArr.push(item.value);item.value=''})
-        expenseArrayHard.push(indExpenseArr)
+        console.log(indExpenseArr)
+        indExpenseArr.length === 4 && expenseArrayHard.push(indExpenseArr);
         createAlertContainer('success', 'Data added successfully', 'check_circle');
-        // ONCE THE FORM DATA HAS BEEN COLLECTED, THE DATA IS THEN USED TO UPDATE THE LOCALSTORAGE AND THEN IS USED TO RE-RENDER CONTENTS ON THE DASHBOARD
+        // ONCE THE FORM DATA HAS BEEN COLLECTED, THE DATA IS THEN USED TO UPDATE THE LOCALSTORAGE AND THEN USED TO RE-RENDER CONTENTS ON THE DASHBOARD
         renderExpense(renderObject(expenseArrayHard))  
         updateLocalstorage(expenseArrayHard, 'expense')
     } 
@@ -624,7 +628,7 @@ function renderDueCards(dueObjArr){
     dueCardContainer.innerHTML = '';
     dueObjArr.forEach((obj, index)=>{
         const dueCard = document.createElement('div');
-        dueCard.classList.add('col','col-10','col-md-5','col-lg-5','v-stack','rounded-2','border','p-2','m-2');
+        dueCard.classList.add('col','col-10','col-md-5','col-lg-5', 'd-flex', 'flex-column', 'justify-content-between', 'align-items-center','rounded-2','border','p-2','m-2');
         dueCard.setAttribute('id', index)
         const dueDetailsContainer = document.createElement('div');
         dueDetailsContainer.classList.add('d-flex','flex-column', 'justify-content-center', 'align-items-center', 'pb-1');
@@ -634,7 +638,7 @@ function renderDueCards(dueObjArr){
             if(key==='due' || key==='dueDate'){
                 if(key === 'dueDate'){
                     dueDetails.style = 'color: #808080; font-size: 0.75rem;'
-                    const dateValidation = +obtainDateInfo(obj[key], 'day') < 10 ? `0${obtainDateInfo(obj[key], 'day')}` : obtainDateInfo(obj[key], 'day')
+                    const dateValidation = +obtainDateInfo(obj[key], 'day') < +10 ? `0${obtainDateInfo(obj[key], 'day')}` : obtainDateInfo(obj[key], 'day')
                     dueDetails.textContent = `${dateValidation} ${getMonthName(obj[key])} ${obtainDateInfo(obj[key], 'year')}`
                     dueDetailsContainer.appendChild(dueDetails)
                 }
@@ -663,10 +667,10 @@ function renderDueCards(dueObjArr){
                 dueDetails.textContent = `₹${obj[key]}`;
                 dueCard.appendChild(dueDetails);
                 const dueDoneButton = document.createElement('button');
-                dueDoneButton.classList.add('col','col-6', 'my-1', 'text-success');
+                dueDoneButton.classList.add('col','col-6', 'my-1', 'text-success', 'border', 'border-success', 'rounded-pill');
                 dueDoneButton.style = 'background-color: rgba(255, 255, 255, 0); border: none; outline: none'
                 const dueDeleteButton = document.createElement('button');
-                dueDeleteButton.classList.add('col', 'col-6', 'text-danger', 'my-1')
+                dueDeleteButton.classList.add('col', 'col-6', 'text-danger', 'my-1', 'border', 'border-danger', 'rounded-pill')
                 dueDeleteButton.style = 'background-color: rgba(255, 255, 255, 0); border: none; outline: none';
                 dueDeleteButton.innerHTML = '<span class="material-symbols-outlined align-middle">delete</span>'
                 dueDoneButton.innerHTML = '<span class="material-symbols-outlined align-middle">done</span>'
@@ -676,7 +680,7 @@ function renderDueCards(dueObjArr){
                     dueCard.style.backgroundColor = '#C8E4B2';
                     const dueComplete = document.createElement('button');
                     dueComplete.style = 'background-color: rgba(255, 255, 255, 0); border: none; outline: none';
-                    dueComplete.classList.add('col-12');
+                    dueComplete.classList.add('col-12', 'border', 'border-info', 'rounded-pill');
                     dueComplete.innerHTML = '<span class="material-symbols-outlined align-middle text-info">add</span>';
                     dueCard.appendChild(dueComplete)
                     dueComplete.onclick = (e)=>{
